@@ -13,22 +13,35 @@ class Reader extends Component {
   };
 
   async componentDidMount() {
+    const { navigation } = this.props;
     const { status } = await Permissions.askAsync(Permissions.CAMERA);
     this.setState({
       hasCameraPermission: status === 'granted'
     });
+    this.focusListener = navigation.addListener("didFocus", this.onFocus);
+  }
+
+  componentWillUnmount() {
+    this.focusListener.remove();
   }
 
   componentWillReceiveProps(nextProps, nextContext) {
     const { sentHistory, confirmHistory } = nextProps;
     if (sentHistory) {
-      Alert.alert(`success! ${sentHistory.email}`);
+      Alert.alert(`success! ${sentHistory.hostName}(${sentHistory.email})`);
       confirmHistory();
     }
   }
 
+  onFocus = () => {
+    const { paused } = this.state;
+    if (paused) {
+      this.camera.resumePreview();
+      this.setState({ paused: false });
+    }
+  };
+
   handleScanned = (result) => {
-    console.log(result);
     const { handleScanned, isSendingHistory, historyLog } = this.props;
     const date = new Date().toDateString();
     const token = result.data;

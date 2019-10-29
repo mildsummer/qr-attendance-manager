@@ -1,32 +1,57 @@
 import React, { Component } from 'react';
-import { Text, View } from 'react-native';
-import { Button } from 'react-native-elements';
+import { Text, View, Alert, TouchableWithoutFeedback } from 'react-native';
+import { Button, Input } from 'react-native-elements';
 import { connect } from 'react-redux';
+import Icon from "react-native-vector-icons/SimpleLineIcons";
 import styles from '../styles/main';
-import { signOut, sendPasswordResetEmail, verifyEmail } from '../redux';
+import { sendPasswordResetEmail, verifyEmail, sendName, refreshToken } from '../redux';
 import QRCode from '../common/QRCode';
 
 class User extends Component {
   state = {
     user: this.props.user,
     phoneNumber: null,
-    phoneNumberVerificationCode: null
+    name: this.props.dbData ? this.props.dbData.name : '',
+    sendingName: false,
+    refreshing: false
   };
 
   componentDidMount() {
     const { user } = this.state;
     if (!user.emailVerified) {
-      this.props.verifyEmail();
+      // this.props.verifyEmail();
     }
   }
 
   componentWillReceiveProps(nextProps) {
     if (nextProps.user && nextProps.user !== this.state.user) {
       this.setState({
-        user: nextProps.user
+        user: nextProps.user,
+        name: ''
       });
     }
+    if (nextProps.dbData && !this.props.dbData) {
+      this.setState({ name: nextProps.dbData.name });
+    }
   }
+
+  onChangeName = (name) => {
+    this.setState({ name });
+  };
+
+  sendName = () => {
+    const { name } = this.state;
+    const { sendName } = this.props;
+    this.setState({ sendingName: true });
+    sendName(name)
+      .then(() => {
+        this.setState({ sendingName: false });
+      })
+      .catch(({ message }) => {
+        Alert.alert(message);
+        this.setState({ sendingName: false });
+      });
+  };
 
   goTo = (routeName) => {
     return () => {
@@ -36,17 +61,46 @@ class User extends Component {
   };
 
   render() {
-    // const { signOut, sendPasswordResetEmail } = this.props;
-    const { token, signOut } = this.props;
-    const { user } = this.state;
+    const { token, refreshToken, isCreatingToken } = this.props;
+    const { user, name, sendingName } = this.state;
     return (
       <View style={styles.container}>
         {token ? (
-          <QRCode
-            data={token}
-            size='100%'
-            errorCorrectionLevel='H'
-          />
+          <View
+            style={{
+              width: '100%',
+              aspectRatio: 1,
+              justifyContent: 'center',
+              alignItems: 'center'
+            }}
+          >
+            <QRCode
+              data={token}
+              size='100%'
+              errorCorrectionLevel='H'
+            />
+            {isCreatingToken ? null : (
+              <TouchableWithoutFeedback onPress={refreshToken}>
+                <View
+                  style={{
+                    position: 'absolute',
+                    width: 50,
+                    height: 50,
+                    borderRadius: 25,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    backgroundColor: 'rgba(0, 0, 0, 0.5)'
+                  }}
+                >
+                  <Icon
+                    name='refresh'
+                    size={30}
+                    color='white'
+                  />
+                </View>
+              </TouchableWithoutFeedback>
+            )}
+          </View>
         ) : null}
         <Text
           style={{
@@ -66,19 +120,19 @@ class User extends Component {
             width: '100%',
           }}
         >
-          {/* <Button
-            style={{
-              marginBottom: 16
-            }}
-            title='Reset password'
-            onPress={sendPasswordResetEmail}
-          /> */}
+          <Input
+            label='名前/タイトル'
+            value={name}
+            autoCapitalize='none'
+            onChangeText={this.onChangeName}
+          />
           <Button
             style={{
               marginBottom: 16
             }}
-            title='Sign out'
-            onPress={signOut}
+            title='OK'
+            loading={sendingName}
+            onPress={this.sendName}
           />
         </View>
       </View>
@@ -88,13 +142,16 @@ class User extends Component {
 
 const mapStateToProps = state => ({
   user: state.user.data,
-  token: state.user.token
+  dbData: state.user.dbData,
+  token: state.user.token,
+  isCreatingToken: state.user.isCreatingToken
 });
 
 const mapDispatchToProps = {
-  signOut,
   verifyEmail,
-  sendPasswordResetEmail
+  sendName,
+  sendPasswordResetEmail,
+  refreshToken
 };
 
 export default connect(

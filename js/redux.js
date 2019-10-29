@@ -3,7 +3,8 @@ import thunk from 'redux-thunk';
 import { Alert } from 'react-native';
 import { Linking } from 'expo'
 import { FIREBASE_AUTH_DOMAIN } from 'react-native-dotenv';
-import firebase, { auth, db, functions } from './utils/firebase';
+import { auth, db, functions } from './utils/firebase';
+import { addChangeDateListener } from './utils/onChangeDate';
 
 export const signIn = (email, password) => (dispatch) => {
   dispatch({
@@ -28,16 +29,6 @@ export const authUser = (email, password) => (dispatch) => {
         type: 'FAIL_AUTH_USER',
         message
       });
-    });
-};
-
-export const signOut = () => (dispatch) => {
-  dispatch({
-    type: 'START_SIGN_OUT_USER'
-  });
-  auth.signOut()
-    .catch(({ message}) => {
-      Alert.alert(message);
     });
 };
 
@@ -83,32 +74,31 @@ export const verifyEmail = () => (dispatch) => {
   }
 };
 
-export const confirmPhoneNumberVerification = (verificationCode) => (dispatch) => {
-  const state = store.getState().user;
-  const phoneNumberConfirmation = state.phoneNumberConfirmation;
-  const user = state.data;
-  const credential = firebase.auth.PhoneAuthProvider.credential(phoneNumberConfirmation.verificationId, verificationCode);
-  user.linkWithCredential(credential).then((userCredential) => {
-    dispatch({
-      type: 'SUCCESS_CONFIRM_PHONE_NUMBER',
-      user: userCredential.user
+export const sendName = (name) => (dispatch) => {
+  const user = store.getState().user.data;
+  return db.collection('/users')
+    .doc(user.uid)
+    .set({ name }, { merge: true })
+    .then(() => {
+      dispatch({
+        type: 'SUCCESS_SEND_NAME',
+        name
+      });
+      return true;
     });
-  }).catch(function({ message }) {
-    Alert.alert(message);
-  });
 };
 
 export const handleScanned = (token) => (dispatch) => {
+  const dbData = store.getState().user.dbData;
   dispatch({
     type: 'SEND_HISTORY',
     token
   });
-  functions.httpsCallable('createHistory')({ token })
+  functions.httpsCallable('createHistory')({ token, guestName: dbData ? dbData.name : null })
     .then((result) => {
       dispatch({
         type: 'SEND_HISTORY_SUCCESS',
-        token: result.data.token,
-        email: result.data.email
+        data: result.data
       });
     })
     .catch(({ message }) => {
@@ -151,6 +141,25 @@ export const getHistory = (size, startAfter) => (dispatch) => {
   }
 };
 
+export const refreshToken = () => (dispatch) => {
+  dispatch({
+    type: 'CREATE_TOKEN'
+  });
+  functions.httpsCallable('createToken')()
+    .then((token) => {
+      dispatch({
+        type: 'CREATE_TOKEN_SUCCESS',
+        token: token.data
+      });
+    })
+    .catch(({ message }) => {
+      Alert.alert(message);
+      dispatch({
+        type: 'CREATE_TOKEN_FAIL'
+      });
+    });
+};
+
 const INITIAL_STATE = {
   data: null,
   dbData: null,
@@ -160,7 +169,8 @@ const INITIAL_STATE = {
   phoneNumberConfirmation: null,
   isSendingHistory: false,
   sentHistory: null,
-  historyLog: {}
+  historyLog: {},
+  isCreatingToken: false
 };
 
 const reducer = (state = INITIAL_STATE, action) => {
@@ -170,16 +180,34 @@ const reducer = (state = INITIAL_STATE, action) => {
     case 'SUCCESS_AUTH_USER':
       return { ...state, data: action.data };
     case 'SIGN_OUT_USER':
-      return { ...state, data: null };
+      return INITIAL_STATE;
     case 'FAIL_AUTH_USER':
       return { ...state, authError: action.message };
     case 'SUCCESS_GET_USER':
-      console.log(action.data);
       return { ...state, dbData: action.data };
+    case 'SUCCESS_SEND_NAME':
+      return {
+        ...state,
+        dbData: {
+          ...state.dbData,
+          name: action.name
+        }
+      };
+    case 'CREATE_TOKEN':
+      return {
+        ...state,
+        isCreatingToken: true
+      };
     case 'CREATE_TOKEN_SUCCESS':
       return {
         ...state,
-        token: action.token
+        token: action.token,
+        isCreatingToken: false
+      };
+    case 'CREATE_TOKEN_FAIL':
+      return {
+        ...state,
+        isCreatingToken: false
       };
     case 'SUCCESS_GET_HISTORY':
       return {
@@ -216,7 +244,7 @@ const reducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         isSendingHistory: false,
-        sentHistory: { token: action.token, email: action.email }
+        sentHistory: action.data
       };
     case 'SEND_HISTORY_FAIL':
       return {
@@ -227,6 +255,11 @@ const reducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         sentHistory: null
+      };
+    case "CHANGE_DATE":
+      return {
+        ...state,
+        historyLog: {}
       };
     default:
       return state;
@@ -247,19 +280,26 @@ auth.onAuthStateChanged((user) => {
       type: 'SUCCESS_AUTH_USER',
       data: user
     });
-    functions.httpsCallable('createToken')()
-      .then((token) => {
+    db.collection('/users')
+      .doc(user.uid)
+      .get()
+      .then((documentSnapshot) => {
         store.dispatch({
-          type: 'CREATE_TOKEN_SUCCESS',
-          token: token.data
+          type: 'SUCCESS_GET_USER',
+          data: documentSnapshot.data()
         });
-      })
-      .catch(({ message }) => {
-        Alert.alert(message);
       });
+    refreshToken()(store.dispatch);
   } else if (current && !user) {
     store.dispatch({
       type: 'SIGN_OUT_USER'
     });
   }
+});
+
+addChangeDateListener(() => {
+  console.log('date changed');
+  store.dispatch({
+    type: 'CHANGE_DATE'
+  });
 });

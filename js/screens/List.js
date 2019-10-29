@@ -3,7 +3,7 @@ import { View, FlatList, ActivityIndicator } from 'react-native';
 import { ListItem } from 'react-native-elements';
 import { connect } from 'react-redux';
 import { getHistory } from '../redux';
-import { HISTORY_TYPE_GUEST, HISTORY_TYPE_HOST } from '../../functions/constants/common';
+import { HISTORY_TYPE_GUEST } from '../../functions/constants/common';
 
 class List extends Component {
   constructor(props) {
@@ -57,7 +57,7 @@ class List extends Component {
             renderItem={({ item }) => (
               <ListItem
                 title={`[${item.type === HISTORY_TYPE_GUEST ? 'GUEST' : 'HOST'}] ${new Date(item.createdAt.seconds * 1000).toString()}`}
-                subtitle={item.email}
+                subtitle={`${item.type === HISTORY_TYPE_GUEST ? item.hostName : item.guestName}(${item.email})`}
                 bottomDivider
               />
             )}

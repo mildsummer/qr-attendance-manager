@@ -25,7 +25,7 @@ exports.createUser = functions.auth.user().onCreate((user) => {
 });
 
 exports.createHistory = functions.https.onCall((data, context) => {
-  const { token } = data;
+  const { token, guestName } = data;
   const date = new Date();
   const dateString = `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate()}`;
   const timeStamp = admin.firestore.Timestamp.fromDate(date);
@@ -34,12 +34,12 @@ exports.createHistory = functions.https.onCall((data, context) => {
     .get()
     .then((querySnapshot) => {
       if (querySnapshot.docs.length) {
-        const targetUser = querySnapshot.docs[0].data();
+        const hostUser = querySnapshot.docs[0].data();
         return db.collection('/users')
           .doc(context.auth.uid)
           .collection('/history')
           .where('date', '==', dateString)
-          .where('uid', '==', targetUser.uid)
+          .where('uid', '==', hostUser.uid)
           .where('type', '==', constants.HISTORY_TYPE_GUEST)
           .get()
           .then((querySnapshot) => {
@@ -53,13 +53,15 @@ exports.createHistory = functions.https.onCall((data, context) => {
                 .set({
                   createdAt: timeStamp,
                   date: dateString,
-                  uid: targetUser.uid,
-                  email: targetUser.email,
+                  uid: hostUser.uid,
+                  email: hostUser.email,
+                  hostName: hostUser.name,
+                  guestName,
                   type: constants.HISTORY_TYPE_GUEST
                 })
                 .then(() => {
                   return db.collection('/users')
-                    .doc(targetUser.uid)
+                    .doc(hostUser.uid)
                     .collection('/history')
                     .doc()
                     .set({
@@ -67,10 +69,13 @@ exports.createHistory = functions.https.onCall((data, context) => {
                       date: dateString,
                       uid: context.auth.uid,
                       email: context.auth.token.email,
+                      hostName: hostUser.name,
+                      guestName,
                       type: constants.HISTORY_TYPE_HOST
                     })
                     .then(() => ({
-                      email: targetUser.email,
+                      email: hostUser.email,
+                      hostName: hostUser.name,
                       token
                     }));
                 });

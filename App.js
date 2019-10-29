@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
+import { Alert } from "react-native";
 import { ThemeProvider } from 'react-native-elements';
 import { createAppContainer, NavigationActions } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
 import { connect, Provider } from 'react-redux'
+import Icon from "react-native-vector-icons/SimpleLineIcons";
 import './js/utils/firebase';
 import { store } from './js/redux'
+import { auth } from "./js/utils/firebase";
 
 // screens
 import Login from './js/screens/Login';
@@ -38,19 +41,22 @@ const AppNavigator = createAppContainer(createStackNavigator(
           screen: User,
           navigationOptions:  {
             title: 'User page',
-            headerLeft: null
+            headerLeft: null,
+            tabBarIcon: (<Icon name='user' size={17} />)
           }
         },
         Reader: {
           screen: Reader,
           navigationOptions:  {
-            title: 'QR Reader'
+            title: 'QR Reader',
+            tabBarIcon: (<Icon name='user' size={17} />)
           }
         },
         List: {
           screen: List,
           navigationOptions:  {
-            title: 'List'
+            title: 'List',
+            tabBarIcon: (<Icon name='list' size={17} />)
           }
         }
       }, {
@@ -59,7 +65,18 @@ const AppNavigator = createAppContainer(createStackNavigator(
       }),
       navigationOptions: ({ navigation }) => ({
         title: navigation.state.routes[navigation.state.index].key,
-        headerLeft: null
+        headerLeft: (
+          <Icon
+            name='logout'
+            size={17}
+            onPress={() => {
+              auth.signOut()
+                .catch(({ message}) => {
+                  Alert.alert(message);
+                });
+            }}
+          />
+        )
       })
     }
   }
