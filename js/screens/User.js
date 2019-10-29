@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, Alert, TouchableWithoutFeedback } from 'react-native';
+import { Text, View, Alert, TouchableWithoutFeedback, Keyboard, KeyboardAvoidingView } from 'react-native';
 import { Button, Input } from 'react-native-elements';
 import { connect } from 'react-redux';
 import Icon from "react-native-vector-icons/SimpleLineIcons";
@@ -64,78 +64,83 @@ class User extends Component {
     const { token, refreshToken, isCreatingToken } = this.props;
     const { user, name, sendingName } = this.state;
     return (
-      <View style={styles.container}>
-        {token ? (
+      <TouchableWithoutFeedback
+        onPress={Keyboard.dismiss}
+        accessible={false}
+      >
+        <KeyboardAvoidingView style={styles.container} behavior="padding">
+          {token ? (
+            <View
+              style={{
+                width: '100%',
+                aspectRatio: 1,
+                justifyContent: 'center',
+                alignItems: 'center'
+              }}
+            >
+              <QRCode
+                data={token}
+                size='100%'
+                errorCorrectionLevel='H'
+              />
+              {isCreatingToken ? null : (
+                <TouchableWithoutFeedback onPress={refreshToken}>
+                  <View
+                    style={{
+                      position: 'absolute',
+                      width: 50,
+                      height: 50,
+                      borderRadius: 25,
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      backgroundColor: 'rgba(0, 0, 0, 0.5)'
+                    }}
+                  >
+                    <Icon
+                      name='refresh'
+                      size={30}
+                      color='white'
+                    />
+                  </View>
+                </TouchableWithoutFeedback>
+              )}
+            </View>
+          ) : null}
+          <Text
+            style={{
+              marginTop: 16,
+              marginBottom: 16
+            }}
+          >{user.email}</Text>
+          {user.phoneNumber ? (
+            <Text
+              style={{
+                marginBottom: 16
+              }}
+            >{user.phoneNumber}</Text>
+          ) : null}
           <View
             style={{
               width: '100%',
-              aspectRatio: 1,
-              justifyContent: 'center',
-              alignItems: 'center'
             }}
           >
-            <QRCode
-              data={token}
-              size='100%'
-              errorCorrectionLevel='H'
+            <Input
+              label='名前/タイトル'
+              value={name}
+              autoCapitalize='none'
+              onChangeText={this.onChangeName}
             />
-            {isCreatingToken ? null : (
-              <TouchableWithoutFeedback onPress={refreshToken}>
-                <View
-                  style={{
-                    position: 'absolute',
-                    width: 50,
-                    height: 50,
-                    borderRadius: 25,
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    backgroundColor: 'rgba(0, 0, 0, 0.5)'
-                  }}
-                >
-                  <Icon
-                    name='refresh'
-                    size={30}
-                    color='white'
-                  />
-                </View>
-              </TouchableWithoutFeedback>
-            )}
+            <Button
+              style={{
+                marginBottom: 16
+              }}
+              title='OK'
+              loading={sendingName}
+              onPress={this.sendName}
+            />
           </View>
-        ) : null}
-        <Text
-          style={{
-            marginTop: 16,
-            marginBottom: 16
-          }}
-        >{user.email}</Text>
-        {user.phoneNumber ? (
-          <Text
-            style={{
-              marginBottom: 16
-            }}
-          >{user.phoneNumber}</Text>
-        ) : null}
-        <View
-          style={{
-            width: '100%',
-          }}
-        >
-          <Input
-            label='名前/タイトル'
-            value={name}
-            autoCapitalize='none'
-            onChangeText={this.onChangeName}
-          />
-          <Button
-            style={{
-              marginBottom: 16
-            }}
-            title='OK'
-            loading={sendingName}
-            onPress={this.sendName}
-          />
-        </View>
-      </View>
+        </KeyboardAvoidingView>
+      </TouchableWithoutFeedback>
     );
   }
 }

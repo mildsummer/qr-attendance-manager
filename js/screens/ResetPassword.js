@@ -4,20 +4,16 @@ import { Button, Icon, Input } from 'react-native-elements';
 import { connect } from 'react-redux'
 import styles from '../styles/main';
 import { sendPasswordResetEmail } from '../redux';
+import { Formik } from "formik";
+import * as Yup from "yup";
 
 class ResetPassword extends Component {
   state = {
-    email: this.props.navigation.state.params.email || '',
     sending: false
   };
 
-  onChangeEmail = (email) => {
-    this.setState({ email });
-  };
-
-  submit = () => {
+  submit = ({ email }) => {
     const { sendPasswordResetEmail } = this.props;
-    const { email } = this.state;
     this.setState({ sending: true });
     sendPasswordResetEmail(email)
       .then(() => {
@@ -39,87 +35,67 @@ class ResetPassword extends Component {
   };
 
   render() {
-    const { error } = this.props;
-    const { email, sending } = this.state;
+    const { sending } = this.state;
     return (
-      <TouchableWithoutFeedback
-        onPress={Keyboard.dismiss}
-        accessible={false}
+      <Formik
+        initialValues={{ email: this.props.navigation.state.params.email | '' }}
+        onSubmit={this.submit}
+        validationSchema={Yup.object().shape({
+          email: Yup.string().email('Emailの形式ではないようです。').required('Emailは必須です。')
+        })}
+        validateOnChange={false}
       >
-        <View style={styles.container}>
-          {error ? (
-            <View
-              style={{
-                flexDirection: 'row',
-                width: '100%',
-                marginBottom: 32,
-                padding: 8,
-                backgroundColor: 'rgb(255, 100, 100)',
-                borderRadius: 8,
-                overflow: 'hidden'
-              }}
-            >
-              <Icon
-                name='error'
-                color='white'
-                size={16}
-                iconStyle={{
-                  marginRight: 8
-                }}
-              />
-              <Text
-                style={{
-                  color: 'white',
-                  fontSize: 16
-                }}
-              >
-                {error}
-              </Text>
-            </View>
-          ) : null}
-          <View
-            style={{
-              width: '100%'
-            }}
+        {({ handleChange, handleSubmit, values, errors, touched, handleBlur, isValid }) => (
+          <TouchableWithoutFeedback
+            onPress={Keyboard.dismiss}
+            accessible={false}
           >
-            <Input
-              autoCapitalize='none'
-              autoCompleteType='email'
-              leftIcon={{
-                name: 'email',
-                iconStyle: {
-                  marginLeft: 0,
-                  marginRight: 10,
-                  color: 'gray'
-                }
-              }}
-              containerStyle={{
-                paddingLeft: 0,
-                paddingRight: 0,
-                marginBottom: 32
-              }}
-              label='Your Email Address'
-              value={email}
-              placeholder='email@address.com'
-              onChangeText={this.onChangeEmail}
-            />
-            <View>
-              <Button
-                loading={sending}
-                title="OK"
-                onPress={this.submit}
+            <View style={styles.container}>
+              <Input
+                autoCapitalize='none'
+                autoCompleteType='email'
+                leftIcon={{
+                  name: 'email',
+                  iconStyle: {
+                    marginLeft: 0,
+                    marginRight: 10,
+                    color: 'gray'
+                  }
+                }}
+                containerStyle={{
+                  paddingLeft: 0,
+                  paddingRight: 0,
+                  marginBottom: 32
+                }}
+                errorMessage={errors.email && touched.email ? errors.email : null}
+                errorStyle={{
+                  position: 'absolute',
+                  bottom: 0
+                }}
+                label='Your Email Address'
+                value={values.email}
+                placeholder='email address'
+                onChangeText={handleChange('email')}
+                onBlur={handleBlur('email')}
               />
+              <View>
+                <Button
+                  loading={sending}
+                  title="OK"
+                  disabled={!values.email || !isValid}
+                  onPress={handleSubmit}
+                />
+              </View>
             </View>
-          </View>
-        </View>
-      </TouchableWithoutFeedback>
+          </TouchableWithoutFeedback>
+        )}
+      </Formik>
     );
   }
 }
 
 const mapStateToProps = state => ({
-  user: state.user.data,
-  error: state.user.authError
+  user: state.user.data
 });
 
 const mapDispatchToProps = {

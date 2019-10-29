@@ -6,12 +6,14 @@ import { FIREBASE_AUTH_DOMAIN } from 'react-native-dotenv';
 import { auth, db, functions } from './utils/firebase';
 import { addChangeDateListener } from './utils/onChangeDate';
 
-export const signIn = (email, password) => (dispatch) => {
+export const authUser = (email, password) => (dispatch) => {
+  console.log('auth', email, password);
   dispatch({
     type: 'START_AUTH_USER'
   });
-  auth.signInWithEmailAndPassword(email, password)
-    .catch(({ message}) => {
+  auth.createUserWithEmailAndPassword(email, password)
+    .catch(({ message }) => {
+      Alert.alert('認証に失敗しました', message);
       dispatch({
         type: 'FAIL_AUTH_USER',
         message
@@ -19,16 +21,13 @@ export const signIn = (email, password) => (dispatch) => {
     });
 };
 
-export const authUser = (email, password) => (dispatch) => {
+export const signIn = (email, password) => (dispatch) => {
   dispatch({
     type: 'START_AUTH_USER'
   });
-  auth.createUserWithEmailAndPassword(email, password)
-    .catch(({ message }) => {
-      dispatch({
-        type: 'FAIL_AUTH_USER',
-        message
-      });
+  auth.signInWithEmailAndPassword(email, password)
+    .catch(() => {
+      authUser(email, password)(dispatch);
     });
 };
 
@@ -161,9 +160,9 @@ export const refreshToken = () => (dispatch) => {
 };
 
 const INITIAL_STATE = {
+  isAuthSubmitting: false,
   data: null,
   dbData: null,
-  authError: null,
   history: null,
   hasGetAllHistory: false,
   phoneNumberConfirmation: null,
@@ -176,13 +175,13 @@ const INITIAL_STATE = {
 const reducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case 'START_AUTH_USER':
-      return { ...state, error: null };
+      return { ...state, isAuthSubmitting: true };
     case 'SUCCESS_AUTH_USER':
-      return { ...state, data: action.data };
+      return { ...state, data: action.data, isAuthSubmitting: false };
+    case 'FAIL_AUTH_USER':
+      return { ...state, data: action.data, isAuthSubmitting: false };
     case 'SIGN_OUT_USER':
       return INITIAL_STATE;
-    case 'FAIL_AUTH_USER':
-      return { ...state, authError: action.message };
     case 'SUCCESS_GET_USER':
       return { ...state, dbData: action.data };
     case 'SUCCESS_SEND_NAME':
