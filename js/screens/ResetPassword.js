@@ -1,46 +1,46 @@
 import React, { Component } from 'react';
-import { TouchableWithoutFeedback, Text, View, Keyboard } from 'react-native';
+import { TouchableWithoutFeedback, Text, View, Keyboard, Alert } from 'react-native';
 import { Button, Icon, Input } from 'react-native-elements';
 import { connect } from 'react-redux'
 import styles from '../styles/main';
-import { authUser, signIn } from '../redux';
+import { sendPasswordResetEmail } from '../redux';
 
-class Login extends Component {
+class ResetPassword extends Component {
   state = {
-    email: null,
-    password: null
+    email: this.props.navigation.state.params.email || '',
+    sending: false
   };
 
   onChangeEmail = (email) => {
     this.setState({ email });
   };
 
-  onChangePassword = (password) => {
-    this.setState({ password });
+  submit = () => {
+    const { sendPasswordResetEmail } = this.props;
+    const { email } = this.state;
+    this.setState({ sending: true });
+    sendPasswordResetEmail(email)
+      .then(() => {
+        this.setState({ sending: false });
+        Alert.alert('メールを送信しました');
+        this.goTo('Login')();
+      })
+      .catch(() => {
+        Alert.alert('メールの送信に失敗しました');
+        this.setState({ sending: false });
+      });
   };
 
-  signIn = () => {
-    const { signIn } = this.props;
-    const { email, password } = this.state;
-    signIn(email, password);
-  };
-
-  auth = () => {
-    const { authUser } = this.props;
-    const { email, password } = this.state;
-    authUser(email, password);
-  };
-
-  goTo = (routeName, params = {}) => {
+  goTo = (routeName) => {
     return () => {
       const { navigation } = this.props;
-      navigation.navigate({ routeName, params });
+      navigation.navigate(routeName);
     };
   };
 
   render() {
     const { error } = this.props;
-    const { email, password } = this.state;
+    const { email, sending } = this.state;
     return (
       <TouchableWithoutFeedback
         onPress={Keyboard.dismiss}
@@ -103,50 +103,11 @@ class Login extends Component {
               placeholder='email@address.com'
               onChangeText={this.onChangeEmail}
             />
-            <Input
-              leftIcon={{
-                name: 'lock',
-                iconStyle: {
-                  marginLeft: 0,
-                  marginRight: 10,
-                  color: 'gray',
-                  marginHorizontal: 0,
-                  start: 0
-                }
-              }}
-              containerStyle={{
-                paddingLeft: 0,
-                paddingRight: 0,
-                paddingBottom: 32
-              }}
-              label='Password'
-              value={password}
-              placeholder='Password'
-              secureTextEntry={true}
-              autoCapitalize='none'
-              autoCompleteType='password'
-              onChangeText={this.onChangePassword}
-            />
             <View>
               <Button
-                title='Register'
-                style={{
-                  paddingBottom: 16
-                }}
-                onPress={this.auth}
-                disabled={!(email && password)}
-              />
-              <Button
-                title='Sign In'
-                style={{
-                  paddingBottom: 16
-                }}
-                onPress={this.signIn}
-                disabled={!(email && password)}
-              />
-              <Button
-                title="パスワードをお忘れの方はこちら"
-                onPress={this.goTo('ResetPassword', { email })}
+                loading={sending}
+                title="OK"
+                onPress={this.submit}
               />
             </View>
           </View>
@@ -162,11 +123,10 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = {
-  authUser,
-  signIn
+  sendPasswordResetEmail
 };
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Login)
+)(ResetPassword)

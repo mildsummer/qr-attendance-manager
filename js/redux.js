@@ -41,27 +41,8 @@ export const signOut = () => (dispatch) => {
     });
 };
 
-export const sendPasswordResetEmail = () => (dispatch) => {
-  const email = store.getState().user.data && store.getState().user.data.email;
-  if (email) {
-    Alert.alert(
-      'Reset Password',
-      'We will email you instructions on how to reset your password.',
-      [
-        { text: 'Cancel', style: 'cancel' },
-        {
-          text: 'OK',
-          onPress: () => {
-            auth.sendPasswordResetEmail(email).then(() => {
-              Alert.alert('The email has been sent to your account.');
-            }).catch(function({ message }) {
-              Alert.alert(message);
-            });
-          }
-        },
-      ]
-    );
-  }
+export const sendPasswordResetEmail = (email) => () => {
+  return auth.sendPasswordResetEmail(email)
 };
 
 export const verifyEmail = () => (dispatch) => {

@@ -80,14 +80,6 @@ class User extends Component {
             title='Sign out'
             onPress={signOut}
           />
-          <Button
-            title="Reader"
-            onPress={this.goTo('Reader')}
-          />
-          <Button
-            title="List"
-            onPress={this.goTo('List')}
-          />
         </View>
       </View>
     );
