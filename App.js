@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Alert } from "react-native";
 import { ThemeProvider } from 'react-native-elements';
-import { createAppContainer, NavigationActions } from 'react-navigation';
+import { createAppContainer, NavigationActions, createSwitchNavigator } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
 import { connect, Provider } from 'react-redux'
@@ -11,6 +11,7 @@ import { store } from './js/redux'
 import { auth } from "./js/utils/firebase";
 
 // screens
+import Loading from './js/screens/Loading';
 import Login from './js/screens/Login';
 import ResetPassword from './js/screens/ResetPassword';
 import User from './js/screens/User';
@@ -18,75 +19,86 @@ import Reader from './js/screens/Reader';
 import List from './js/screens/List';
 
 const mapStateToProps = state => ({
-  user: state.user.data
+  user: state.user.data,
+  init: state.user.init
 });
 
-const AppNavigator = createAppContainer(createStackNavigator(
-  {
-    Login: {
-      screen: Login,
-      navigationOptions: {
-        header: null
-      }
-    },
-    ResetPassword: {
-      screen: ResetPassword,
-      navigationOptions: {
-        title: 'パスワードをお忘れの方'
-      }
-    },
-    User: {
-      screen: createBottomTabNavigator({
-        User: {
-          screen: User,
-          navigationOptions:  {
-            title: 'User page',
-            headerLeft: null,
-            tabBarIcon: (<Icon name='user' size={17} />)
-          }
-        },
-        Reader: {
-          screen: Reader,
-          navigationOptions:  {
-            title: 'QR Reader',
-            tabBarIcon: (<Icon name='user' size={17} />)
-          }
-        },
-        List: {
-          screen: List,
-          navigationOptions:  {
-            title: 'List',
-            tabBarIcon: (<Icon name='list' size={17} />)
-          }
+const AppNavigator = createAppContainer(createSwitchNavigator({
+  Loading,
+  SignedOut : {
+    screen: createStackNavigator({
+      Login: {
+        screen: Login,
+        navigationOptions: {
+          title: 'ログイン'
         }
-      }, {
-        initialRouteName: 'User',
-        order: ['Reader', 'User', 'List']
-      }),
-      navigationOptions: ({ navigation }) => ({
-        title: navigation.state.routes[navigation.state.index].key,
-        headerLeft: (
-          <Icon
-            name='logout'
-            size={17}
-            onPress={() => {
-              auth.signOut()
-                .catch(({ message}) => {
-                  Alert.alert(message);
-                });
-            }}
-          />
-        )
-      })
-    }
+      },
+      ResetPassword: {
+        screen: ResetPassword,
+        navigationOptions: {
+          title: 'パスワードをお忘れの方'
+        }
+      }
+    }, { initialRouteName: 'Login' })
+  },
+  SignedIn: {
+    screen: createStackNavigator({
+      User: {
+        screen: createBottomTabNavigator({
+          User: {
+            screen: User,
+            navigationOptions:  {
+              title: 'User page',
+              tabBarIcon: (<Icon name='user' size={17} />)
+            }
+          },
+          Reader: {
+            screen: Reader,
+            navigationOptions:  {
+              title: 'QR Reader',
+              tabBarIcon: (<Icon name='user' size={17} />)
+            }
+          },
+          List: {
+            screen: List,
+            navigationOptions:  {
+              title: 'List',
+              tabBarIcon: (<Icon name='list' size={17} />)
+            }
+          }
+        }, {
+          initialRouteName: 'User',
+          order: ['Reader', 'User', 'List']
+        }),
+        navigationOptions: ({ navigation }) => ({
+          title: navigation.state.routes[navigation.state.index].key,
+          headerLeft: (
+            <Icon
+              name='logout'
+              size={17}
+              onPress={() => {
+                auth.signOut()
+                  .catch(({ message }) => {
+                    Alert.alert(message);
+                  });
+              }}
+            />
+          )
+        })
+      }
+    })
   }
-));
+}, {
+  initialRouteName: 'Loading'
+}));
 
 const AppContainer = connect(mapStateToProps, {})(
   class extends Component {
     componentWillReceiveProps(nextProps) {
-      const { user } = this.props;
-      if (user && !nextProps.user) {
+      const { user, init } = this.props;
+      if (nextProps.init && !init && !nextProps.user) {
+        this.navigate('Login');
+      } else if (user && !nextProps.user) {
         this.navigate('Login');
       } else if (!user && nextProps.user) {
         this.navigate('User');

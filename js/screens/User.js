@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, Alert, TouchableWithoutFeedback, Keyboard, KeyboardAvoidingView } from 'react-native';
+import { Text, View, Alert, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import { Button, Input } from 'react-native-elements';
 import { connect } from 'react-redux';
 import Icon from "react-native-vector-icons/SimpleLineIcons";
@@ -68,7 +68,31 @@ class User extends Component {
         onPress={Keyboard.dismiss}
         accessible={false}
       >
-        <KeyboardAvoidingView style={styles.container} behavior="padding">
+        <View style={styles.container}>
+          <View
+            style={{
+              width: '100%',
+              flexDirection: 'row'
+            }}
+          >
+            <Input
+              label='名前/タイトル'
+              value={name}
+              autoCapitalize='none'
+              onChangeText={this.onChangeName}
+              containerStyle={{
+                width: '70%'
+              }}
+            />
+            <Button
+              title='OK'
+              containerStyle={{
+                width: '30%'
+              }}
+              loading={sendingName}
+              onPress={this.sendName}
+            />
+          </View>
           {token ? (
             <View
               style={{
@@ -112,34 +136,7 @@ class User extends Component {
               marginBottom: 16
             }}
           >{user.email}</Text>
-          {user.phoneNumber ? (
-            <Text
-              style={{
-                marginBottom: 16
-              }}
-            >{user.phoneNumber}</Text>
-          ) : null}
-          <View
-            style={{
-              width: '100%',
-            }}
-          >
-            <Input
-              label='名前/タイトル'
-              value={name}
-              autoCapitalize='none'
-              onChangeText={this.onChangeName}
-            />
-            <Button
-              style={{
-                marginBottom: 16
-              }}
-              title='OK'
-              loading={sendingName}
-              onPress={this.sendName}
-            />
-          </View>
-        </KeyboardAvoidingView>
+        </View>
       </TouchableWithoutFeedback>
     );
   }

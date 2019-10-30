@@ -160,6 +160,7 @@ export const refreshToken = () => (dispatch) => {
 };
 
 const INITIAL_STATE = {
+  init: false,
   isAuthSubmitting: false,
   data: null,
   dbData: null,
@@ -177,11 +178,13 @@ const reducer = (state = INITIAL_STATE, action) => {
     case 'START_AUTH_USER':
       return { ...state, isAuthSubmitting: true };
     case 'SUCCESS_AUTH_USER':
-      return { ...state, data: action.data, isAuthSubmitting: false };
+      return { ...state, data: action.data, isAuthSubmitting: false, init: true };
     case 'FAIL_AUTH_USER':
       return { ...state, data: action.data, isAuthSubmitting: false };
     case 'SIGN_OUT_USER':
       return INITIAL_STATE;
+    case 'INIT_AUTH':
+      return { ...state, init: true };
     case 'SUCCESS_GET_USER':
       return { ...state, dbData: action.data };
     case 'SUCCESS_SEND_NAME':
@@ -292,6 +295,10 @@ auth.onAuthStateChanged((user) => {
   } else if (current && !user) {
     store.dispatch({
       type: 'SIGN_OUT_USER'
+    });
+  } else if (!user) {
+    store.dispatch({
+      type: 'INIT_AUTH'
     });
   }
 });
