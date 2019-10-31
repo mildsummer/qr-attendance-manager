@@ -153,12 +153,14 @@ export const refreshHistory = () => dispatch => {
   const user = store.getState().user.data;
   const history = store.getState().user.history;
   if (user) {
-    db.collection("/users")
+    let historyRef = db.collection("/users")
       .doc(user.uid)
       .collection("/history")
-      .orderBy("createdAt", "desc")
-      .endBefore(history[0])
-      .get()
+      .orderBy("createdAt", "desc");
+    if (history && history.length) {
+      historyRef = historyRef.endBefore(history[0]);
+    }
+    historyRef.get()
       .then(querySnapshot => {
         dispatch({
           type: "REFRESH_HISTORY_SUCCESS",

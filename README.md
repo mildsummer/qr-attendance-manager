@@ -2,7 +2,8 @@
 
 ExpoとFirebaseで最低限仕様のアプリを作ってみたものです。インストールは一般的なExpoプロジェクトと同様です。  
 Firebase周りの設定は`.env`を使用しています。`.env-example`を参考に設定してください。  
-その他下記の設定が必要です。
+`.firebaserc`や`app.json`は適宜修正してください。  
+その他下記のFirebase側の設定が必要です。
 
 * Firebase Authenticationでメール/パスワードでのログインを有効化
 * Firebase Cloud Functionをデプロイ（functionsディレクトリがあります）
