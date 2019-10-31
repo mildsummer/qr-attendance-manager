@@ -1,12 +1,41 @@
 import React, { Component } from 'react';
-import { TouchableWithoutFeedback, View, Keyboard, Text, TouchableOpacity } from 'react-native';
+import { TouchableWithoutFeedback, View, Keyboard, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { connect } from 'react-redux'
 import { Formik } from 'formik';
-import styles from '../styles/main';
+import * as Yup from 'yup';
 import Input from '../common/Input';
 import Button from '../common/Button';
-import * as Yup from 'yup';
 import { signIn } from '../redux';
+import { VALIDATION_EMAIL, VALIDATION_PASSWORD } from '../common/validations';
+import colors from '../common/colors';
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 16,
+    backgroundColor: colors.accent,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  inputContainer: {
+    marginBottom: 48
+  },
+  inputError: {
+    position: 'absolute',
+    width: '100%',
+    left: 0,
+    bottom: -24,
+    textAlign: 'center',
+    margin: 0
+  },
+  submitButton: {
+    marginBottom: 16
+  },
+  resetPassword: {
+    marginTop: 2,
+    color: '#fff'
+  }
+});
 
 class Login extends Component {
   signIn = ({ email, password }) => {
@@ -28,8 +57,8 @@ class Login extends Component {
         initialValues={{ email: '', password: '' }}
         onSubmit={this.signIn}
         validationSchema={Yup.object().shape({
-          email: Yup.string().email('メールアドレスの形式で入力してください').required('メールアドレスは必須です'),
-          password: Yup.string().min(6, '6文字以上で入力してください').required('パスワードは必須です')
+          email: VALIDATION_EMAIL,
+          password: VALIDATION_PASSWORD
         })}
         validateOnChange={false}
       >
@@ -42,38 +71,20 @@ class Login extends Component {
               <Input
                 autoCapitalize='none'
                 autoCompleteType='email'
-                containerStyle={{
-                  marginBottom: 48
-                }}
+                containerStyle={styles.inputContainer}
                 label='メールアドレス'
                 errorMessage={errors.email && touched.email ? errors.email : null}
-                errorStyle={{
-                  position: 'absolute',
-                  width: '100%',
-                  left: 0,
-                  bottom: -24,
-                  textAlign: 'center',
-                  margin: 0
-                }}
+                errorStyle={styles.inputError}
                 value={values.email}
                 placeholder='メールアドレスを入力'
                 onChangeText={handleChange('email')}
                 onBlur={handleBlur('email')}
               />
               <Input
-                containerStyle={{
-                  marginBottom: 48
-                }}
+                containerStyle={styles.inputContainer}
                 label='パスワード'
                 errorMessage={errors.password && touched.password ? errors.password : null}
-                errorStyle={{
-                  position: 'absolute',
-                  width: '100%',
-                  left: 0,
-                  bottom: -24,
-                  textAlign: 'center',
-                  margin: 0
-                }}
+                errorStyle={styles.inputError}
                 value={values.password}
                 placeholder='パスワードを入力'
                 secureTextEntry={true}
@@ -84,20 +95,13 @@ class Login extends Component {
               />
               <Button
                 title='ログイン / 新規登録'
-                style={{
-                  marginBottom: 16
-                }}
+                style={styles.submitButton}
                 onPress={handleSubmit}
                 disabled={!values.email || !values.password || !isValid}
                 loading={isAuthSubmitting}
               />
               <TouchableOpacity onPress={this.goTo('ResetPassword', { email: values.email })}>
-                <Text
-                  style={{
-                    marginTop: 2,
-                    color: '#fff'
-                  }}
-                >パスワードをお忘れの方はこちら</Text>
+                <Text style={styles.resetPassword}>パスワードをお忘れの方はこちら</Text>
               </TouchableOpacity>
             </View>
           </TouchableWithoutFeedback>

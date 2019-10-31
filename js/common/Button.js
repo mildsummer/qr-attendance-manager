@@ -1,22 +1,6 @@
 import React, { PureComponent } from 'react';
 import { Button } from 'react-native-elements';
-
-const containerStyle = {
-  width: '100%',
-  maxWidth: 250
-};
-
-const buttonStyle = {
-  minHeight: 40,
-  backgroundColor: '#fff',
-  borderRadius: 25,
-  paddingTop: 7
-};
-
-const titleStyle = {
-  color: '#00c2ad',
-  fontWeight: '500'
-};
+import colors from './colors';
 
 export default class CustomInput extends PureComponent {
   render() {
@@ -24,25 +8,33 @@ export default class CustomInput extends PureComponent {
       <Button {...{
         ...this.props,
         containerStyle: {
-          ...containerStyle,
+          width: '100%',
+          maxWidth: 250,
           ...this.props.containerStyle
         },
         buttonStyle : {
-          ...buttonStyle,
+          minHeight: 40,
+          backgroundColor: '#fff',
+          borderRadius: 25,
+          paddingTop: 7,
           ...this.props.buttonStyle
         },
         titleStyle: {
-          ...titleStyle,
+          color: colors.accent,
+          fontWeight: '500',
           ...this.props.titleStyle
         },
         disabledStyle: {
-          backgroundColor: 'rgba(255, 255, 255, 0.4)'
+          backgroundColor: 'rgba(255, 255, 255, 0.4)',
+          ...this.props.disabledStyle
         },
         disabledTitleStyle: {
-          color: '#00c2ad'
+          color: colors.accent,
+          ...this.props.disabledTitleStyle
         },
         loadingProps: {
-          color: '#00c2ad'
+          color: colors.accent,
+          ...this.props.loadingProps
         }
       }} />
     );

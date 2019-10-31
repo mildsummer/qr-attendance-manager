@@ -1,10 +1,83 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux'
 import { handleScanned, confirmHistory } from '../redux';
-import { View, TouchableWithoutFeedback, Alert, ActivityIndicator } from 'react-native';
+import { View, TouchableWithoutFeedback, Alert, ActivityIndicator, StyleSheet } from 'react-native';
 import * as Permissions from 'expo-permissions';
 import { Camera } from 'expo-camera';
 import { BarCodeScanner } from 'expo-barcode-scanner';
+
+const styles = StyleSheet.create({
+  container: {
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
+    top: 0,
+    left: 0
+  },
+  camera: {
+    height: '100%',
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  inner: {
+    position: 'relative',
+    top: 0,
+    left: 0,
+    width: '90%',
+    aspectRatio: 1,
+    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+    zIndex: 1
+  },
+  innerLeftTop: {
+    position: 'absolute',
+    top: 10,
+    left: 10,
+    width: '20%',
+    aspectRatio: 1,
+    borderTopWidth: 1,
+    borderLeftWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.5)'
+  },
+  innerRightTop: {
+    position: 'absolute',
+    top: 10,
+    right: 10,
+    width: '20%',
+    aspectRatio: 1,
+    borderTopWidth: 1,
+    borderRightWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.5)'
+  },
+  innerLeftBottom: {
+    position: 'absolute',
+    bottom: 10,
+    left: 10,
+    width: '20%',
+    aspectRatio: 1,
+    borderBottomWidth: 1,
+    borderLeftWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.5)'
+  },
+  innerRightBottom: {
+    position: 'absolute',
+    bottom: 10,
+    right: 10,
+    width: '20%',
+    aspectRatio: 1,
+    borderBottomWidth: 1,
+    borderRightWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.5)'
+  },
+  loading: {
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
+    top: 0,
+    left: 0,
+    backgroundColor: 'rgba(0, 0, 0, 0.8)'
+  }
+});
 
 class Reader extends Component {
   state = {
@@ -64,13 +137,7 @@ class Reader extends Component {
     const { isSendingHistory } = this.props;
     return (
       <TouchableWithoutFeedback
-        style={{
-          position: 'absolute',
-          width: '100%',
-          height: '100%',
-          top: 0,
-          left: 0
-        }}
+        style={styles.container}
         onPress={this.toggle}
       >
         <Camera
@@ -81,86 +148,20 @@ class Reader extends Component {
           }}
           onBarCodeScanned={this.handleScanned}
           barCodeScannerSettings={{barCodeTypes: [BarCodeScanner.Constants.BarCodeType.qr]}}
-          style={{
-            height: '100%',
-            width: '100%',
-            justifyContent: 'center',
-            alignItems: 'center'
-          }}
+          style={styles.camera}
           autoFocus={Camera.Constants.AutoFocus.on}
           whiteBalance={Camera.Constants.WhiteBalance.auto}
         >
-          <View
-            style={{
-              position: 'relative',
-              top: 0,
-              left: 0,
-              width: '90%',
-              aspectRatio: 1,
-              backgroundColor: 'rgba(255, 255, 255, 0.15)',
-              zIndex: 1
-            }}
-          >
-            <View
-              style={{
-                position: 'absolute',
-                top: 10,
-                left: 10,
-                width: '20%',
-                aspectRatio: 1,
-                borderTopWidth: 1,
-                borderLeftWidth: 1,
-                borderColor: 'rgba(255, 255, 255, 0.5)'
-              }}
-            />
-            <View
-              style={{
-                position: 'absolute',
-                top: 10,
-                right: 10,
-                width: '20%',
-                aspectRatio: 1,
-                borderTopWidth: 1,
-                borderRightWidth: 1,
-                borderColor: 'rgba(255, 255, 255, 0.5)'
-              }}
-            />
-            <View
-              style={{
-                position: 'absolute',
-                bottom: 10,
-                left: 10,
-                width: '20%',
-                aspectRatio: 1,
-                borderBottomWidth: 1,
-                borderLeftWidth: 1,
-                borderColor: 'rgba(255, 255, 255, 0.5)'
-              }}
-            />
-            <View
-              style={{
-                position: 'absolute',
-                bottom: 10,
-                right: 10,
-                width: '20%',
-                aspectRatio: 1,
-                borderBottomWidth: 1,
-                borderRightWidth: 1,
-                borderColor: 'rgba(255, 255, 255, 0.5)'
-              }}
-            />
+          <View style={styles.inner}>
+            <View style={styles.innerLeftTop} />
+            <View style={styles.innerRightTop} />
+            <View style={styles.innerLeftBottom} />
+            <View style={styles.innerRightBottom} />
           </View>
           {isSendingHistory ? (
             <ActivityIndicator
               size='large'
-              style={{
-                position: 'absolute',
-                width: '100%',
-                height: '100%',
-                top: 0,
-                left: 0,
-                backgroundColor: 'rgba(0, 0, 0, 0.8)'
-              }}
+              style={styles.loading}
             />
           ) : null}
         </Camera>

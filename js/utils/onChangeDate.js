@@ -27,4 +27,3 @@ export const removeChangeDateListener = (callback) => {
 };
 
 setTimeout(check, nextDate - now);
-console.log(nextDate, now, nextDate - now);

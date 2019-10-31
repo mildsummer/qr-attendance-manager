@@ -1,9 +1,35 @@
 import React, { Component } from 'react';
-import { View, FlatList, ActivityIndicator, RefreshControl } from 'react-native';
+import { View, FlatList, ActivityIndicator, RefreshControl, StyleSheet } from 'react-native';
 import { ListItem } from 'react-native-elements';
 import { connect } from 'react-redux';
 import { getHistory, refreshHistory } from '../redux';
 import { HISTORY_TYPE_GUEST } from '../../functions/constants/common';
+import colors from '../common/colors'
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    height: '100%'
+  },
+  itemTitle: {
+    fontWeight: '500',
+    marginBottom: 4
+  },
+  itemSubtitle: {
+    color: 'rgba(0, 0, 0, 0.5)'
+  },
+  footer: {
+    marginTop: 16,
+    marginBottom: 16
+  },
+  loading: {
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
+    top: 0,
+    left: 0
+  }
+});
 
 class List extends Component {
   state = {
@@ -50,12 +76,7 @@ class List extends Component {
     const { isLoading, isRefreshing } = this.state;
     const isLoadingEnabled = !isLoading && !hasGetAll;
     return (
-      <View
-        style={{
-          flex: 1,
-          height: '100%'
-        }}
-      >
+      <View style={styles.container}>
         {data ? (
           <FlatList
             data={data}
@@ -66,15 +87,10 @@ class List extends Component {
               const createdAtString = `${createdAt.getFullYear()}年${createdAt.getMonth() + 1}月${createdAt.getDate()}日 ${createdAt.getHours()}:${createdAt.getMinutes().toString().padStart(2, '0')}`;
               return (
                 <ListItem
-                  titleStyle={{
-                    fontWeight: '500',
-                    marginBottom: 4
-                  }}
+                  titleStyle={styles.itemTitle}
                   title={data.type === HISTORY_TYPE_GUEST ? `${data.hostName || '名前なし'}(${data.email})` : `[${data.hostName || '名前なし'}]${data.guestName || '名前なし'}さん(${data.email})`}
                   subtitle={createdAtString}
-                  subtitleStyle={{
-                    color: 'rgba(0, 0, 0, 0.5)'
-                  }}
+                  subtitleStyle={styles.itemSubtitle}
                   bottomDivider
                 />
               );
@@ -87,31 +103,22 @@ class List extends Component {
               <RefreshControl
                 refreshing={isRefreshing}
                 onRefresh={this.refresh}
-                tintColor="#00c2ad"
+                tintColor={colors.accent}
               />
             }
             ListFooterComponent={hasGetAll ? null : (
               <ActivityIndicator
                 size="large"
-                color="#00c2ad"
-                style={{
-                  marginTop: 16,
-                  marginBottom: 16
-                }}
+                color={colors.accent}
+                style={styles.footer}
               />
             )}
           />
         ) : (
           <ActivityIndicator
             size='large'
-            color="#00c2ad"
-            style={{
-              position: 'absolute',
-              width: '100%',
-              height: '100%',
-              top: 0,
-              left: 0
-            }}
+            color={colors.accent}
+            style={styles.loading}
           />
         )}
       </View>

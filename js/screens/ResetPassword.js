@@ -1,12 +1,41 @@
 import React, { Component } from 'react';
-import { TouchableWithoutFeedback, Text, View, Keyboard, Alert } from 'react-native';
+import { TouchableWithoutFeedback, Text, View, Keyboard, Alert, StyleSheet } from 'react-native';
 import { connect } from 'react-redux'
-import styles from '../styles/main';
 import { sendPasswordResetEmail } from '../redux';
 import { Formik } from "formik";
 import * as Yup from "yup";
 import Input from '../common/Input';
 import Button from '../common/Button';
+import { VALIDATION_EMAIL } from "../common/validations";
+import colors from '../common/colors';
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    padding: 16,
+    backgroundColor: colors.accent,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  title: {
+    marginBottom: 32,
+    color: '#fff',
+    fontSize: 16
+  },
+  inputContainer: {
+    paddingLeft: 0,
+    paddingRight: 0,
+    marginBottom: 48
+  },
+  inputError: {
+    position: 'absolute',
+    width: '100%',
+    left: 0,
+    bottom: -24,
+    textAlign: 'center',
+    margin: 0
+  }
+});
 
 class ResetPassword extends Component {
   state = {
@@ -43,7 +72,7 @@ class ResetPassword extends Component {
         initialValues={{ email: this.props.navigation.state.params.email || '' }}
         onSubmit={this.submit}
         validationSchema={Yup.object().shape({
-          email: Yup.string().email('メールアドレスの形式で入力してください').required('メールアドレスは必須です')
+          email: VALIDATION_EMAIL
         })}
         validateOnChange={false}
       >
@@ -53,32 +82,15 @@ class ResetPassword extends Component {
             accessible={false}
           >
             <View style={styles.container}>
-              <Text
-                style={{
-                  marginBottom: 32,
-                  color: '#fff',
-                  fontSize: 16
-                }}
-              >
+              <Text style={styles.title}>
                 パスワード再設定用のメールを送信します
               </Text>
               <Input
                 autoCapitalize='none'
                 autoCompleteType='email'
-                containerStyle={{
-                  paddingLeft: 0,
-                  paddingRight: 0,
-                  marginBottom: 48
-                }}
+                containerStyle={styles.inputContainer}
                 errorMessage={errors.email && touched.email ? errors.email : null}
-                errorStyle={{
-                  position: 'absolute',
-                  width: '100%',
-                  left: 0,
-                  bottom: -24,
-                  textAlign: 'center',
-                  margin: 0
-                }}
+                errorStyle={styles.inputError}
                 label='メールアドレス'
                 value={values.email || ''}
                 placeholder='メールアドレスを入力'
