@@ -146,27 +146,27 @@ class User extends Component {
             ) : null}
           </View>
           <Text style={styles.email}>{user.email}</Text>
-          {token ? (
-            <View style={styles.qrWrapper}>
+          <View style={styles.qrWrapper}>
+            {token ? (
               <QRCode data={token} size="100%" errorCorrectionLevel="H" />
-              <TouchableWithoutFeedback
-                onPress={isCreatingToken ? null : refreshToken}
-              >
-                <View style={styles.refreshButton}>
-                  {isCreatingToken ? (
-                    <ActivityIndicator size="small" color="#fff" />
-                  ) : (
-                    <Icon
-                      name="refresh"
-                      size={30}
-                      color="white"
-                      style={styles.refreshIcon}
-                    />
-                  )}
-                </View>
-              </TouchableWithoutFeedback>
-            </View>
-          ) : null}
+            ) : null}
+            <TouchableWithoutFeedback
+              onPress={isCreatingToken ? null : refreshToken}
+            >
+              <View style={styles.refreshButton}>
+                {isCreatingToken ? (
+                  <ActivityIndicator size="small" color="#fff" />
+                ) : (
+                  <Icon
+                    name="refresh"
+                    size={30}
+                    color="white"
+                    style={styles.refreshIcon}
+                  />
+                )}
+              </View>
+            </TouchableWithoutFeedback>
+          </View>
         </View>
       </TouchableWithoutFeedback>
     );
