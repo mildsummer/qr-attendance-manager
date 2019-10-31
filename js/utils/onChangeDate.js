@@ -15,7 +15,7 @@ const check = () => {
       callback();
     });
   }
-  window.setTimeout(check, nextDate - now);
+  setTimeout(check, nextDate - now);
 };
 
 export const addChangeDateListener = callback => {
