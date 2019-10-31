@@ -34,3 +34,8 @@ service cloud.firestore {
 
 # スクリーンショット
 
+<img src="https://user-images.githubusercontent.com/2764100/67958465-959e6800-fc3a-11e9-9c90-0ea6142a6dd0.png" width="400">
+<img src="https://user-images.githubusercontent.com/2764100/67958564-b9fa4480-fc3a-11e9-9624-8b66abfc14df.png" width="400">
+<img src="https://user-images.githubusercontent.com/2764100/67958605-c7afca00-fc3a-11e9-9f41-c112f5b7cf14.png" width="400">
+<img src="https://user-images.githubusercontent.com/2764100/67958581-bebef880-fc3a-11e9-898f-593bea5c6a97.png" width="400">
+
