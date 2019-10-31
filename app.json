@@ -1,6 +1,7 @@
 {
   "expo": {
-    "name": "出欠管理",
+    "name": "QRゲスト管理",
+    "description": "QRコードを使って会員管理や出欠管理をするためのアプリです。",
     "slug": "qr-attendance-manager",
     "privacy": "public",
     "sdkVersion": "35.0.0",
@@ -24,7 +25,14 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "qr.attendance.manager.nodokayamamoto.com",
+      "infoPlist": {
+        "NSPhotoLibraryUsageDescription": "QRコードを読み取るためにカメラを使用します"
+      }
+    },
+    "android": {
+      "package": "qr.attendance.manager.nodokayamamoto.com"
     },
     "primaryColor": "#00c2ad"
   }
