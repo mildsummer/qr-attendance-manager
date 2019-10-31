@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Alert } from "react-native";
+import { Alert, TouchableOpacity } from "react-native";
 import { ThemeProvider } from 'react-native-elements';
 import { createAppContainer, NavigationActions, createSwitchNavigator } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
@@ -68,21 +68,42 @@ const AppNavigator = createAppContainer(createSwitchNavigator({
           }
         }, {
           initialRouteName: 'User',
-          order: ['Reader', 'User', 'List']
+          order: ['Reader', 'User', 'List'],
+          tabBarOptions: {
+            style: {
+              borderTopWidth: 0
+            }
+          }
         }),
         navigationOptions: ({ navigation }) => ({
           title: navigation.state.routes[navigation.state.index].key,
+          headerTintColor: '#fff',
+          headerStyle: {
+            borderBottomWidth: 0,
+            backgroundColor: '#74dcd9',
+          },
+          headerTitleStyle: {
+            fontWeight: 'bold'
+          },
           headerLeft: (
-            <Icon
-              name='logout'
-              size={17}
+            <TouchableOpacity
+              style={{
+                marginHorizontal: 6,
+                padding: 10
+              }}
               onPress={() => {
                 auth.signOut()
                   .catch(({ message }) => {
                     Alert.alert(message);
                   });
               }}
-            />
+            >
+              <Icon
+                name='logout'
+                size={17}
+                color='#fff'
+              />
+            </TouchableOpacity>
           )
         })
       }

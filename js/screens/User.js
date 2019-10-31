@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 import { Text, View, Alert, TouchableWithoutFeedback, Keyboard } from 'react-native';
-import { Button, Input } from 'react-native-elements';
+import { Button } from 'react-native-elements';
 import { connect } from 'react-redux';
 import Icon from "react-native-vector-icons/SimpleLineIcons";
 import styles from '../styles/main';
+import Input from '../common/Input';
 import { sendPasswordResetEmail, verifyEmail, sendName, refreshToken } from '../redux';
 import QRCode from '../common/QRCode';
 
@@ -79,27 +80,45 @@ class User extends Component {
               label='名前/タイトル'
               value={name}
               autoCapitalize='none'
+              placeholder="名前/タイトルを入力"
               onChangeText={this.onChangeName}
-              containerStyle={{
-                width: '70%'
-              }}
             />
-            <Button
+            {/* <Button
               title='OK'
               containerStyle={{
                 width: '30%'
               }}
               loading={sendingName}
               onPress={this.sendName}
-            />
+            /> */}
+          </View>
+          <View
+            style={{
+              marginTop: 16,
+              flexDirection: 'row',
+            }}
+          >
+            <Text
+              style={{
+                color: 'rgba(255, 255, 255, 0.6)'
+              }}
+            >HOST: </Text>
+            <Text
+              style={{
+                color: '#fff'
+              }}
+            >{user.email}</Text>
           </View>
           {token ? (
             <View
               style={{
                 width: '100%',
+                marginTop: 16,
                 aspectRatio: 1,
                 justifyContent: 'center',
-                alignItems: 'center'
+                alignItems: 'center',
+                borderRadius: 20,
+                overflow: 'hidden'
               }}
             >
               <QRCode
@@ -107,35 +126,32 @@ class User extends Component {
                 size='100%'
                 errorCorrectionLevel='H'
               />
-              {isCreatingToken ? null : (
-                <TouchableWithoutFeedback onPress={refreshToken}>
-                  <View
+              <TouchableWithoutFeedback onPress={isCreatingToken ? null : refreshToken}>
+                <View
+                  style={{
+                    position: 'absolute',
+                    width: 50,
+                    height: 50,
+                    borderRadius: 25,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    backgroundColor: '#74dcd9',
+                    opacity: isCreatingToken ? '0.5' : 1
+                  }}
+                >
+                  <Icon
+                    name='refresh'
+                    size={30}
+                    color='white'
                     style={{
-                      position: 'absolute',
-                      width: 50,
-                      height: 50,
-                      borderRadius: 25,
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      backgroundColor: 'rgba(0, 0, 0, 0.5)'
+                      width: 30,
+                      lineHeight: 50
                     }}
-                  >
-                    <Icon
-                      name='refresh'
-                      size={30}
-                      color='white'
-                    />
-                  </View>
-                </TouchableWithoutFeedback>
-              )}
+                  />
+                </View>
+              </TouchableWithoutFeedback>
             </View>
           ) : null}
-          <Text
-            style={{
-              marginTop: 16,
-              marginBottom: 16
-            }}
-          >{user.email}</Text>
         </View>
       </TouchableWithoutFeedback>
     );

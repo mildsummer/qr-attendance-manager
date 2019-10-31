@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import { TouchableWithoutFeedback, Text, View, Keyboard } from 'react-native';
-import { Button, Icon, Input } from 'react-native-elements';
+import { Button } from 'react-native-elements';
 import { connect } from 'react-redux'
 import { Formik } from 'formik';
 import styles from '../styles/main';
+import Input from '../common/Input';
 import * as Yup from 'yup';
-import { authUser, signIn } from '../redux';
+import { signIn } from '../redux';
 
 class Login extends Component {
   signIn = ({ email, password }) => {
@@ -32,7 +33,7 @@ class Login extends Component {
         })}
         validateOnChange={false}
       >
-        {({ handleChange, handleSubmit, values, errors, touched, handleBlur, isValid, isSubmitting }) => (
+        {({ handleChange, handleSubmit, values, errors, touched, handleBlur, isValid }) => (
           <TouchableWithoutFeedback
             onPress={Keyboard.dismiss}
             accessible={false}
