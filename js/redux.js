@@ -7,7 +7,6 @@ import { auth, db, functions } from './utils/firebase';
 import { addChangeDateListener } from './utils/onChangeDate';
 
 export const authUser = (email, password) => (dispatch) => {
-  console.log('auth', email, password);
   dispatch({
     type: 'START_AUTH_USER'
   });
@@ -121,7 +120,7 @@ export const getHistory = (size, startAfter) => (dispatch) => {
     let historyRef = db.collection('/users')
       .doc(user.uid)
       .collection('/history')
-      .orderBy('createdAt')
+      .orderBy('createdAt', "desc")
       .limit(size);
     if (startAfter) {
       historyRef = historyRef.startAfter(startAfter);
@@ -130,8 +129,30 @@ export const getHistory = (size, startAfter) => (dispatch) => {
       .then((querySnapshot) => {
         dispatch({
           type: 'SUCCESS_GET_HISTORY',
-          data: querySnapshot.docs.map((docSnapshot) => (docSnapshot.data())),
+          data: querySnapshot.docs,
           hasGetAll: querySnapshot.docs.length < size
+        });
+      })
+      .catch(({ message }) => {
+        Alert.alert(message);
+      });
+  }
+};
+
+export const refreshHistory = () => (dispatch) => {
+  const user = store.getState().user.data;
+  const history = store.getState().user.history;
+  if (user) {
+    db.collection('/users')
+      .doc(user.uid)
+      .collection('/history')
+      .orderBy('createdAt', "desc")
+      .endBefore(history[0])
+      .get()
+      .then((querySnapshot) => {
+        dispatch({
+          type: 'REFRESH_HISTORY_SUCCESS',
+          data: querySnapshot.docs
         });
       })
       .catch(({ message }) => {
@@ -262,6 +283,11 @@ const reducer = (state = INITIAL_STATE, action) => {
       return {
         ...state,
         historyLog: {}
+      };
+    case "REFRESH_HISTORY_SUCCESS":
+      return {
+        ...state,
+        history: action.data.concat(state.history)
       };
     default:
       return state;

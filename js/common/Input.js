@@ -25,6 +25,10 @@ const labelStyle = {
   textAlign: 'center'
 };
 
+const iconStyle = {
+  color: 'rgba(255, 255, 255, 1)'
+};
+
 export default class CustomInput extends PureComponent {
   render() {
     return (
@@ -45,6 +49,10 @@ export default class CustomInput extends PureComponent {
         labelStyle: {
           ...labelStyle,
           ...this.props.labelStyle
+        },
+        iconStyle: {
+          ...iconStyle,
+          ...this.props.iconStyle
         },
         placeholderTextColor: 'rgba(255, 255, 255, 0.7)'
       }} />

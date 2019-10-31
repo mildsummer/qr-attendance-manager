@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import { Text, View, Alert, TouchableWithoutFeedback, Keyboard } from 'react-native';
-import { Button } from 'react-native-elements';
+import { Text, View, Alert, TouchableWithoutFeedback, Keyboard, ActivityIndicator } from 'react-native';
 import { connect } from 'react-redux';
 import Icon from "react-native-vector-icons/SimpleLineIcons";
 import styles from '../styles/main';
@@ -136,18 +135,21 @@ class User extends Component {
                     justifyContent: 'center',
                     alignItems: 'center',
                     backgroundColor: '#74dcd9',
-                    opacity: isCreatingToken ? '0.5' : 1
                   }}
                 >
-                  <Icon
-                    name='refresh'
-                    size={30}
-                    color='white'
-                    style={{
-                      width: 30,
-                      lineHeight: 50
-                    }}
-                  />
+                  {isCreatingToken ? (
+                    <ActivityIndicator size="small" color="#fff" />
+                  ) : (
+                    <Icon
+                      name='refresh'
+                      size={30}
+                      color='white'
+                      style={{
+                        width: 30,
+                        lineHeight: 50
+                      }}
+                    />
+                  )}
                 </View>
               </TouchableWithoutFeedback>
             </View>

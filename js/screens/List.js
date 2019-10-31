@@ -1,18 +1,15 @@
 import React, { Component } from 'react';
-import { View, FlatList, ActivityIndicator } from 'react-native';
+import { View, FlatList, ActivityIndicator, RefreshControl } from 'react-native';
 import { ListItem } from 'react-native-elements';
 import { connect } from 'react-redux';
-import { getHistory } from '../redux';
+import { getHistory, refreshHistory } from '../redux';
 import { HISTORY_TYPE_GUEST } from '../../functions/constants/common';
 
 class List extends Component {
-  constructor(props) {
-    super(props);
-    this.startLoading = this.startLoading.bind(this);
-    this.state = {
-      isLoading: false
-    };
-  }
+  state = {
+    isLoading: false,
+    isRefreshing: false
+  };
 
   componentDidMount() {
     const { data } = this.props;
@@ -24,25 +21,34 @@ class List extends Component {
   componentWillReceiveProps(nextProps) {
     if (nextProps.data !== this.props.data) {
       this.setState({
-        isLoading: false
-      })
+        isLoading: false,
+        isRefreshing: false
+      });
     }
   }
 
-  startLoading() {
+  startLoading = () => {
     const { data, getHistory } = this.props;
     this.setState({
       isLoading: true
     }, () => {
       getHistory(20, (data && data.length) ? data[data.length - 1] : null);
     });
-  }
+  };
+
+  refresh = () => {
+    const { refreshHistory } = this.props;
+    this.setState({
+      isRefreshing: true
+    }, () => {
+      refreshHistory();
+    });
+  };
 
   render() {
-    const { dbUser, data, hasGetAll } = this.props;
-    const { isLoading } = this.state;
+    const { data, hasGetAll } = this.props;
+    const { isLoading, isRefreshing } = this.state;
     const isLoadingEnabled = !isLoading && !hasGetAll;
-    console.log(data);
     return (
       <View
         style={{
@@ -53,27 +59,38 @@ class List extends Component {
         {data ? (
           <FlatList
             data={data}
-            keyExtractor={(item, index) => (index.toString())}
+            keyExtractor={(item) => (item.id)}
             renderItem={({ item }) => {
-              const createdAt = new Date(item.createdAt.seconds * 1000);
-              const createdAtString = `${createdAt.getFullYear()}年${createdAt.getMonth() + 1}月${createdAt.getDate()}日`;
+              const data = item.data();
+              const createdAt = new Date(data.createdAt.seconds * 1000);
+              const createdAtString = `${createdAt.getFullYear()}年${createdAt.getMonth() + 1}月${createdAt.getDate()}日 ${createdAt.getHours()}:${createdAt.getMinutes().toString().padStart(2, '0')}`;
               return (
                 <ListItem
                   titleStyle={{
                     fontWeight: '500',
                     marginBottom: 4
                   }}
-                  title={`[${item.type === HISTORY_TYPE_GUEST ? 'GUEST' : 'HOST'}] ${createdAtString}`}
-                  subtitle={`${item.type === HISTORY_TYPE_GUEST ? item.hostName : item.guestName}さん(${item.email})`}
+                  title={data.type === HISTORY_TYPE_GUEST ? `${data.hostName}(${data.email})` : `[${data.hostName}]${data.guestName}さん(${data.email})`}
+                  subtitle={createdAtString}
                   bottomDivider
                 />
               );
             }}
+            onRefresh={this.refresh}
+            refreshing={isRefreshing}
             onEndReached={isLoadingEnabled ? this.startLoading : null}
             onEndReachedThreshold={0}
+            refreshControl={
+              <RefreshControl
+                refreshing={isRefreshing}
+                onRefresh={this.refresh}
+                tintColor="#74dcd9"
+              />
+            }
             ListFooterComponent={hasGetAll ? null : (
               <ActivityIndicator
                 size="large"
+                color="#74dcd9"
                 style={{
                   marginTop: 16,
                   marginBottom: 16
@@ -84,6 +101,7 @@ class List extends Component {
         ) : (
           <ActivityIndicator
             size='large'
+            color="#74dcd9"
             style={{
               position: 'absolute',
               width: '100%',
@@ -105,7 +123,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = {
-  getHistory
+  getHistory,
+  refreshHistory
 };
 
 export default connect(

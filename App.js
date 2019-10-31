@@ -6,6 +6,7 @@ import { createStackNavigator } from 'react-navigation-stack';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
 import { connect, Provider } from 'react-redux'
 import Icon from "react-native-vector-icons/SimpleLineIcons";
+import Iconions from "react-native-vector-icons/Ionicons";
 import './js/utils/firebase';
 import { store } from './js/redux'
 import { auth } from "./js/utils/firebase";
@@ -30,16 +31,34 @@ const AppNavigator = createAppContainer(createSwitchNavigator({
       Login: {
         screen: Login,
         navigationOptions: {
-          title: 'ログイン'
+          title: 'ログイン',
+          headerTintColor: '#fff',
+          headerStyle: {
+            borderBottomWidth: 0,
+            backgroundColor: '#74dcd9',
+          },
+          headerTitleStyle: {
+            fontWeight: 'bold'
+          }
         }
       },
       ResetPassword: {
         screen: ResetPassword,
         navigationOptions: {
-          title: 'パスワードをお忘れの方'
+          title: 'パスワードをお忘れの方',
+          headerTintColor: '#fff',
+          headerStyle: {
+            borderBottomWidth: 0,
+            backgroundColor: '#74dcd9',
+          },
+          headerTitleStyle: {
+            fontWeight: 'bold'
+          }
         }
       }
-    }, { initialRouteName: 'Login' })
+    }, {
+      initialRouteName: 'Login'
+    })
   },
   SignedIn: {
     screen: createStackNavigator({
@@ -56,7 +75,7 @@ const AppNavigator = createAppContainer(createSwitchNavigator({
             screen: Reader,
             navigationOptions:  {
               title: 'QR Reader',
-              tabBarIcon: (<Icon name='user' size={17} />)
+              tabBarIcon: (<Iconions name='ios-qr-scanner' size={17} />)
             }
           },
           List: {
@@ -85,7 +104,7 @@ const AppNavigator = createAppContainer(createSwitchNavigator({
           headerTitleStyle: {
             fontWeight: 'bold'
           },
-          headerLeft: (
+          headerRight: (
             <TouchableOpacity
               style={{
                 marginHorizontal: 6,

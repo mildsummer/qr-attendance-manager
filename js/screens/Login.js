@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
-import { TouchableWithoutFeedback, Text, View, Keyboard } from 'react-native';
-import { Button } from 'react-native-elements';
+import { TouchableWithoutFeedback, View, Keyboard, Text, TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux'
 import { Formik } from 'formik';
 import styles from '../styles/main';
 import Input from '../common/Input';
+import Button from '../common/Button';
 import * as Yup from 'yup';
 import { signIn } from '../redux';
 
@@ -28,8 +28,8 @@ class Login extends Component {
         initialValues={{ email: '', password: '' }}
         onSubmit={this.signIn}
         validationSchema={Yup.object().shape({
-          email: Yup.string().email('Emailの形式ではないようです。').required('Emailは必須です。'),
-          password: Yup.string().min(6, '6文字以上。').required('パスワードは必須です。')
+          email: Yup.string().email('メールアドレスの形式で入力してください').required('メールアドレスは必須です'),
+          password: Yup.string().min(6, '6文字以上で入力してください').required('パスワードは必須です')
         })}
         validateOnChange={false}
       >
@@ -42,73 +42,63 @@ class Login extends Component {
               <Input
                 autoCapitalize='none'
                 autoCompleteType='email'
-                leftIcon={{
-                  name: 'email',
-                  iconStyle: {
-                    marginLeft: 0,
-                    marginRight: 10,
-                    color: 'gray'
-                  }
-                }}
                 containerStyle={{
-                  paddingLeft: 0,
-                  paddingRight: 0,
-                  marginBottom: 32
+                  marginBottom: 48
                 }}
-                label='Your Email Address'
+                label='メールアドレス'
                 errorMessage={errors.email && touched.email ? errors.email : null}
                 errorStyle={{
                   position: 'absolute',
-                  bottom: 0
+                  width: '100%',
+                  left: 0,
+                  bottom: -24,
+                  textAlign: 'center',
+                  margin: 0
                 }}
                 value={values.email}
-                placeholder='email address'
+                placeholder='メールアドレスを入力'
                 onChangeText={handleChange('email')}
                 onBlur={handleBlur('email')}
               />
               <Input
-                leftIcon={{
-                  name: 'lock',
-                  iconStyle: {
-                    marginLeft: 0,
-                    marginRight: 10,
-                    color: 'gray'
-                  }
-                }}
                 containerStyle={{
-                  paddingLeft: 0,
-                  paddingRight: 0,
-                  marginBottom: 32
+                  marginBottom: 48
                 }}
-                label='Password'
+                label='パスワード'
                 errorMessage={errors.password && touched.password ? errors.password : null}
                 errorStyle={{
                   position: 'absolute',
-                  bottom: 0
+                  width: '100%',
+                  left: 0,
+                  bottom: -24,
+                  textAlign: 'center',
+                  margin: 0
                 }}
                 value={values.password}
-                placeholder='Password'
+                placeholder='パスワードを入力'
                 secureTextEntry={true}
                 autoCapitalize='none'
                 autoCompleteType='password'
                 onChangeText={handleChange('password')}
                 onBlur={handleBlur('password')}
               />
-              <View>
-                <Button
-                  title='Sign In / Register'
+              <Button
+                title='ログイン / 新規登録'
+                style={{
+                  marginBottom: 16
+                }}
+                onPress={handleSubmit}
+                disabled={!values.email || !values.password || !isValid}
+                loading={isAuthSubmitting}
+              />
+              <TouchableOpacity onPress={this.goTo('ResetPassword', { email: values.email })}>
+                <Text
                   style={{
-                    marginBottom: 16
+                    marginTop: 2,
+                    color: '#fff'
                   }}
-                  onPress={handleSubmit}
-                  disabled={!values.email || !values.password || !isValid}
-                  loading={isAuthSubmitting}
-                />
-                <Button
-                  title="パスワードをお忘れの方はこちら"
-                  onPress={this.goTo('ResetPassword', { email: values.email })}
-                />
-              </View>
+                >パスワードをお忘れの方はこちら</Text>
+              </TouchableOpacity>
             </View>
           </TouchableWithoutFeedback>
         )}

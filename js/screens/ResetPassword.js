@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import { TouchableWithoutFeedback, Text, View, Keyboard, Alert } from 'react-native';
-import { Button, Icon, Input } from 'react-native-elements';
 import { connect } from 'react-redux'
 import styles from '../styles/main';
 import { sendPasswordResetEmail } from '../redux';
 import { Formik } from "formik";
 import * as Yup from "yup";
+import Input from '../common/Input';
+import Button from '../common/Button';
 
 class ResetPassword extends Component {
   state = {
@@ -41,7 +42,7 @@ class ResetPassword extends Component {
         initialValues={{ email: this.props.navigation.state.params.email | '' }}
         onSubmit={this.submit}
         validationSchema={Yup.object().shape({
-          email: Yup.string().email('Emailの形式ではないようです。').required('Emailは必須です。')
+          email: Yup.string().email('メールアドレスの形式で入力してください').required('メールアドレスは必須です')
         })}
         validateOnChange={false}
       >
@@ -54,38 +55,32 @@ class ResetPassword extends Component {
               <Input
                 autoCapitalize='none'
                 autoCompleteType='email'
-                leftIcon={{
-                  name: 'email',
-                  iconStyle: {
-                    marginLeft: 0,
-                    marginRight: 10,
-                    color: 'gray'
-                  }
-                }}
                 containerStyle={{
                   paddingLeft: 0,
                   paddingRight: 0,
-                  marginBottom: 32
+                  marginBottom: 48
                 }}
                 errorMessage={errors.email && touched.email ? errors.email : null}
                 errorStyle={{
                   position: 'absolute',
-                  bottom: 0
+                  width: '100%',
+                  left: 0,
+                  bottom: -24,
+                  textAlign: 'center',
+                  margin: 0
                 }}
-                label='Your Email Address'
-                value={values.email}
-                placeholder='email address'
+                label='メールアドレス'
+                value={values.email || ''}
+                placeholder='メールアドレスを入力'
                 onChangeText={handleChange('email')}
                 onBlur={handleBlur('email')}
               />
-              <View>
-                <Button
-                  loading={sending}
-                  title="OK"
-                  disabled={!values.email || !isValid}
-                  onPress={handleSubmit}
-                />
-              </View>
+              <Button
+                loading={sending}
+                title="OK"
+                disabled={!values.email || !isValid}
+                onPress={handleSubmit}
+              />
             </View>
           </TouchableWithoutFeedback>
         )}
