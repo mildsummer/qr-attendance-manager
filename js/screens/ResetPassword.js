@@ -37,9 +37,10 @@ class ResetPassword extends Component {
 
   render() {
     const { sending } = this.state;
+    console.log(this.props.navigation.state.params.email);
     return (
       <Formik
-        initialValues={{ email: this.props.navigation.state.params.email | '' }}
+        initialValues={{ email: this.props.navigation.state.params.email || '' }}
         onSubmit={this.submit}
         validationSchema={Yup.object().shape({
           email: Yup.string().email('メールアドレスの形式で入力してください').required('メールアドレスは必須です')
@@ -52,6 +53,15 @@ class ResetPassword extends Component {
             accessible={false}
           >
             <View style={styles.container}>
+              <Text
+                style={{
+                  marginBottom: 32,
+                  color: '#fff',
+                  fontSize: 16
+                }}
+              >
+                パスワード再設定用のメールを送信します
+              </Text>
               <Input
                 autoCapitalize='none'
                 autoCompleteType='email'
@@ -77,7 +87,7 @@ class ResetPassword extends Component {
               />
               <Button
                 loading={sending}
-                title="OK"
+                title="メール送信"
                 disabled={!values.email || !isValid}
                 onPress={handleSubmit}
               />

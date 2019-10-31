@@ -70,8 +70,11 @@ class List extends Component {
                     fontWeight: '500',
                     marginBottom: 4
                   }}
-                  title={data.type === HISTORY_TYPE_GUEST ? `${data.hostName}(${data.email})` : `[${data.hostName}]${data.guestName}さん(${data.email})`}
+                  title={data.type === HISTORY_TYPE_GUEST ? `${data.hostName || '名前なし'}(${data.email})` : `[${data.hostName || '名前なし'}]${data.guestName || '名前なし'}さん(${data.email})`}
                   subtitle={createdAtString}
+                  subtitleStyle={{
+                    color: 'rgba(0, 0, 0, 0.5)'
+                  }}
                   bottomDivider
                 />
               );

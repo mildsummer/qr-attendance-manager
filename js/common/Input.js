@@ -22,6 +22,7 @@ const labelStyle = {
   color: 'rgba(0, 0, 0, 0.8)',
   fontSize: 12,
   fontWeight: "200",
+  lineHeight: 16,
   textAlign: 'center'
 };
 

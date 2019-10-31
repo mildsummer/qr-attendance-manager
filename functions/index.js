@@ -35,54 +35,58 @@ exports.createHistory = functions.https.onCall((data, context) => {
     .then((querySnapshot) => {
       if (querySnapshot.docs.length) {
         const hostUser = querySnapshot.docs[0].data();
-        return db.collection('/users')
-          .doc(context.auth.uid)
-          .collection('/history')
-          .where('date', '==', dateString)
-          .where('uid', '==', hostUser.uid)
-          .where('type', '==', constants.HISTORY_TYPE_GUEST)
-          .get()
-          .then((querySnapshot) => {
-            if (querySnapshot.docs.length) {
-              throw new functions.https.HttpsError('already-exists', 'The history already exists.');
-            } else {
-              return db.collection('/users')
-                .doc(context.auth.uid)
-                .collection('/history')
-                .doc()
-                .set({
-                  createdAt: timeStamp,
-                  date: dateString,
-                  uid: hostUser.uid,
-                  email: hostUser.email,
-                  hostName: hostUser.name,
-                  guestName,
-                  type: constants.HISTORY_TYPE_GUEST
-                })
-                .then(() => {
-                  return db.collection('/users')
-                    .doc(hostUser.uid)
-                    .collection('/history')
-                    .doc()
-                    .set({
-                      createdAt: timeStamp,
-                      date: dateString,
-                      uid: context.auth.uid,
-                      email: context.auth.token.email,
-                      hostName: hostUser.name,
-                      guestName,
-                      type: constants.HISTORY_TYPE_HOST
-                    })
-                    .then(() => ({
-                      email: hostUser.email,
-                      hostName: hostUser.name,
-                      token
-                    }));
-                });
-            }
-          });
+        if (hostUser.uid === context.auth.uid) {
+          throw new functions.https.HttpsError('unavailable', '自分自身のQRコードは無効です');
+        } else {
+          return db.collection('/users')
+            .doc(context.auth.uid)
+            .collection('/history')
+            .where('date', '==', dateString)
+            .where('uid', '==', hostUser.uid)
+            .where('type', '==', constants.HISTORY_TYPE_GUEST)
+            .get()
+            .then((querySnapshot) => {
+              if (querySnapshot.docs.length) {
+                throw new functions.https.HttpsError('already-exists', 'すでに読み取りが完了しています');
+              } else {
+                return db.collection('/users')
+                  .doc(context.auth.uid)
+                  .collection('/history')
+                  .doc()
+                  .set({
+                    createdAt: timeStamp,
+                    date: dateString,
+                    uid: hostUser.uid,
+                    email: hostUser.email,
+                    hostName: hostUser.name,
+                    guestName,
+                    type: constants.HISTORY_TYPE_GUEST
+                  })
+                  .then(() => {
+                    return db.collection('/users')
+                      .doc(hostUser.uid)
+                      .collection('/history')
+                      .doc()
+                      .set({
+                        createdAt: timeStamp,
+                        date: dateString,
+                        uid: context.auth.uid,
+                        email: context.auth.token.email,
+                        hostName: hostUser.name,
+                        guestName,
+                        type: constants.HISTORY_TYPE_HOST
+                      })
+                      .then(() => ({
+                        email: hostUser.email,
+                        hostName: hostUser.name,
+                        token
+                      }));
+                  });
+              }
+            });
+        }
       } else {
-        throw new functions.https.HttpsError('cancelled', 'The qr code is invalid');
+        throw new functions.https.HttpsError('cancelled', '無効なQRコードです');
       }
     });
 });

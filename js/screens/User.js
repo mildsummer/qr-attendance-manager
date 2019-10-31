@@ -37,6 +37,10 @@ class User extends Component {
 
   onChangeName = (name) => {
     this.setState({ name });
+    clearTimeout(this.changeNameTimer);
+    this.changeNameTimer = setTimeout(() => {
+      this.sendName();
+    }, 1000);
   };
 
   sendName = () => {
@@ -76,12 +80,23 @@ class User extends Component {
             }}
           >
             <Input
-              label='名前/タイトル'
+              label={`QRコードに紐付けるタイトルや、\nあなたの名前などを設定してください`}
               value={name}
               autoCapitalize='none'
-              placeholder="名前/タイトルを入力"
+              placeholder="タイトル/名前を入力"
               onChangeText={this.onChangeName}
             />
+            {sendingName ? (
+              <ActivityIndicator
+                size="small"
+                color="#fff"
+                style={{
+                  position: 'absolute',
+                  bottom: 14,
+                  right: 1
+                }}
+              />
+            ) : null}
             {/* <Button
               title='OK'
               containerStyle={{

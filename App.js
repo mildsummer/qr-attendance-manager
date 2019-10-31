@@ -67,21 +67,21 @@ const AppNavigator = createAppContainer(createSwitchNavigator({
           User: {
             screen: User,
             navigationOptions:  {
-              title: 'User page',
+              title: 'ホーム',
               tabBarIcon: (<Icon name='user' size={17} />)
             }
           },
           Reader: {
             screen: Reader,
             navigationOptions:  {
-              title: 'QR Reader',
+              title: 'QR読み取り',
               tabBarIcon: (<Iconions name='ios-qr-scanner' size={17} />)
             }
           },
           List: {
             screen: List,
             navigationOptions:  {
-              title: 'List',
+              title: '履歴',
               tabBarIcon: (<Icon name='list' size={17} />)
             }
           }
@@ -95,7 +95,11 @@ const AppNavigator = createAppContainer(createSwitchNavigator({
           }
         }),
         navigationOptions: ({ navigation }) => ({
-          title: navigation.state.routes[navigation.state.index].key,
+          title: ({
+            User: 'ホーム',
+            Reader: 'QR読み取り',
+            List: '読み取り履歴'
+          })[navigation.state.routes[navigation.state.index].key],
           headerTintColor: '#fff',
           headerStyle: {
             borderBottomWidth: 0,
