@@ -54,13 +54,21 @@ class List extends Component {
           <FlatList
             data={data}
             keyExtractor={(item, index) => (index.toString())}
-            renderItem={({ item }) => (
-              <ListItem
-                title={`[${item.type === HISTORY_TYPE_GUEST ? 'GUEST' : 'HOST'}] ${new Date(item.createdAt.seconds * 1000).toString()}`}
-                subtitle={`${item.type === HISTORY_TYPE_GUEST ? item.hostName : item.guestName}(${item.email})`}
-                bottomDivider
-              />
-            )}
+            renderItem={({ item }) => {
+              const createdAt = new Date(item.createdAt.seconds * 1000);
+              const createdAtString = `${createdAt.getFullYear()}年${createdAt.getMonth() + 1}月${createdAt.getDate()}日`;
+              return (
+                <ListItem
+                  titleStyle={{
+                    fontWeight: '500',
+                    marginBottom: 4
+                  }}
+                  title={`[${item.type === HISTORY_TYPE_GUEST ? 'GUEST' : 'HOST'}] ${createdAtString}`}
+                  subtitle={`${item.type === HISTORY_TYPE_GUEST ? item.hostName : item.guestName}さん(${item.email})`}
+                  bottomDivider
+                />
+              );
+            }}
             onEndReached={isLoadingEnabled ? this.startLoading : null}
             onEndReachedThreshold={0}
             ListFooterComponent={hasGetAll ? null : (
