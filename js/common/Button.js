@@ -14,7 +14,7 @@ const buttonStyle = {
 };
 
 const titleStyle = {
-  color: '#74dcd9',
+  color: '#00c2ad',
   fontWeight: '500'
 };
 
@@ -39,10 +39,10 @@ export default class CustomInput extends PureComponent {
           backgroundColor: 'rgba(255, 255, 255, 0.4)'
         },
         disabledTitleStyle: {
-          color: '#74dcd9'
+          color: '#00c2ad'
         },
         loadingProps: {
-          color: '#74dcd9'
+          color: '#00c2ad'
         }
       }} />
     );

@@ -149,7 +149,7 @@ class User extends Component {
                     borderRadius: 25,
                     justifyContent: 'center',
                     alignItems: 'center',
-                    backgroundColor: '#74dcd9',
+                    backgroundColor: '#00c2ad',
                   }}
                 >
                   {isCreatingToken ? (

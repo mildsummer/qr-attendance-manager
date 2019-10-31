@@ -7,7 +7,7 @@ export default class Loading extends Component {
       <View
         style={{
           flex: 1,
-          backgroundColor: '#74dcd9',
+          backgroundColor: '#00c2ad',
           justifyContent: 'center',
           alignItems: 'center'
         }}

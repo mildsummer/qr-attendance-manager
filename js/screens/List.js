@@ -87,13 +87,13 @@ class List extends Component {
               <RefreshControl
                 refreshing={isRefreshing}
                 onRefresh={this.refresh}
-                tintColor="#74dcd9"
+                tintColor="#00c2ad"
               />
             }
             ListFooterComponent={hasGetAll ? null : (
               <ActivityIndicator
                 size="large"
-                color="#74dcd9"
+                color="#00c2ad"
                 style={{
                   marginTop: 16,
                   marginBottom: 16
@@ -104,7 +104,7 @@ class List extends Component {
         ) : (
           <ActivityIndicator
             size='large'
-            color="#74dcd9"
+            color="#00c2ad"
             style={{
               position: 'absolute',
               width: '100%',

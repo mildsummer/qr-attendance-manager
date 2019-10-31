@@ -35,7 +35,7 @@ const AppNavigator = createAppContainer(createSwitchNavigator({
           headerTintColor: '#fff',
           headerStyle: {
             borderBottomWidth: 0,
-            backgroundColor: '#74dcd9',
+            backgroundColor: '#00c2ad',
           },
           headerTitleStyle: {
             fontWeight: 'bold'
@@ -49,7 +49,7 @@ const AppNavigator = createAppContainer(createSwitchNavigator({
           headerTintColor: '#fff',
           headerStyle: {
             borderBottomWidth: 0,
-            backgroundColor: '#74dcd9',
+            backgroundColor: '#00c2ad',
           },
           headerTitleStyle: {
             fontWeight: 'bold'
@@ -103,7 +103,7 @@ const AppNavigator = createAppContainer(createSwitchNavigator({
           headerTintColor: '#fff',
           headerStyle: {
             borderBottomWidth: 0,
-            backgroundColor: '#74dcd9',
+            backgroundColor: '#00c2ad',
           },
           headerTitleStyle: {
             fontWeight: 'bold'
