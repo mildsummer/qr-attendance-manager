@@ -63,12 +63,12 @@ export default class QRCode extends React.PureComponent {
           <ActivityIndicator
             size="large"
             style={{
-              position: 'absolute',
-              width: '100%',
-              height: '100%',
+              position: "absolute",
+              width: "100%",
+              height: "100%",
               top: 0,
               left: 0,
-              backgroundColor: 'rgba(255, 255, 255, 0.5)'
+              backgroundColor: "rgba(255, 255, 255, 0.5)"
             }}
           />
         )}

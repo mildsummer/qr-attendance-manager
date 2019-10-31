@@ -1,13 +1,13 @@
-import React, { Component } from 'react';
-import { View, ActivityIndicator, StyleSheet } from 'react-native';
-import colors from '../common/colors';
+import React, { Component } from "react";
+import { View, ActivityIndicator, StyleSheet } from "react-native";
+import colors from "../common/colors";
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.accent,
-    justifyContent: 'center',
-    alignItems: 'center'
+    justifyContent: "center",
+    alignItems: "center"
   }
 });
 
@@ -15,10 +15,7 @@ export default class Loading extends Component {
   render() {
     return (
       <View style={styles.container}>
-        <ActivityIndicator
-          color="#fff"
-          size="large"
-        />
+        <ActivityIndicator color="#fff" size="large" />
       </View>
     );
   }

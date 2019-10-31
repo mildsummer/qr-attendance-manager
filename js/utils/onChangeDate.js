@@ -11,18 +11,18 @@ const check = () => {
   now = new Date();
   if (now > nextDate) {
     nextDate = getNextDate();
-    callbackArray.forEach((callback) => {
+    callbackArray.forEach(callback => {
       callback();
     });
   }
   window.setTimeout(check, nextDate - now);
 };
 
-export const addChangeDateListener = (callback) => {
+export const addChangeDateListener = callback => {
   callbackArray.push(callback);
 };
 
-export const removeChangeDateListener = (callback) => {
+export const removeChangeDateListener = callback => {
   callbackArray.splice(callbackArray.indexOf(callback), 1);
 };
 

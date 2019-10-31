@@ -1,25 +1,32 @@
-import React, { Component } from 'react';
-import { TouchableWithoutFeedback, Text, View, Keyboard, Alert, StyleSheet } from 'react-native';
-import { connect } from 'react-redux'
-import { sendPasswordResetEmail } from '../redux';
+import React, { Component } from "react";
+import {
+  TouchableWithoutFeedback,
+  Text,
+  View,
+  Keyboard,
+  Alert,
+  StyleSheet
+} from "react-native";
+import { connect } from "react-redux";
+import { sendPasswordResetEmail } from "../redux";
 import { Formik } from "formik";
 import * as Yup from "yup";
-import Input from '../common/Input';
-import Button from '../common/Button';
+import Input from "../common/Input";
+import Button from "../common/Button";
 import { VALIDATION_EMAIL } from "../common/validations";
-import colors from '../common/colors';
+import colors from "../common/colors";
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
     backgroundColor: colors.accent,
-    alignItems: 'center',
-    justifyContent: 'center'
+    alignItems: "center",
+    justifyContent: "center"
   },
   title: {
     marginBottom: 32,
-    color: '#fff',
+    color: "#fff",
     fontSize: 16
   },
   inputContainer: {
@@ -28,11 +35,11 @@ const styles = StyleSheet.create({
     marginBottom: 48
   },
   inputError: {
-    position: 'absolute',
-    width: '100%',
+    position: "absolute",
+    width: "100%",
     left: 0,
     bottom: -24,
-    textAlign: 'center',
+    textAlign: "center",
     margin: 0
   }
 });
@@ -48,16 +55,16 @@ class ResetPassword extends Component {
     sendPasswordResetEmail(email)
       .then(() => {
         this.setState({ sending: false });
-        Alert.alert('メールを送信しました');
-        this.goTo('Login')();
+        Alert.alert("メールを送信しました");
+        this.goTo("Login")();
       })
       .catch(() => {
-        Alert.alert('メールの送信に失敗しました');
+        Alert.alert("メールの送信に失敗しました");
         this.setState({ sending: false });
       });
   };
 
-  goTo = (routeName) => {
+  goTo = routeName => {
     return () => {
       const { navigation } = this.props;
       navigation.navigate(routeName);
@@ -69,14 +76,24 @@ class ResetPassword extends Component {
     console.log(this.props.navigation.state.params.email);
     return (
       <Formik
-        initialValues={{ email: this.props.navigation.state.params.email || '' }}
+        initialValues={{
+          email: this.props.navigation.state.params.email || ""
+        }}
         onSubmit={this.submit}
         validationSchema={Yup.object().shape({
           email: VALIDATION_EMAIL
         })}
         validateOnChange={false}
       >
-        {({ handleChange, handleSubmit, values, errors, touched, handleBlur, isValid }) => (
+        {({
+          handleChange,
+          handleSubmit,
+          values,
+          errors,
+          touched,
+          handleBlur,
+          isValid
+        }) => (
           <TouchableWithoutFeedback
             onPress={Keyboard.dismiss}
             accessible={false}
@@ -86,16 +103,18 @@ class ResetPassword extends Component {
                 パスワード再設定用のメールを送信します
               </Text>
               <Input
-                autoCapitalize='none'
-                autoCompleteType='email'
+                autoCapitalize="none"
+                autoCompleteType="email"
                 containerStyle={styles.inputContainer}
-                errorMessage={errors.email && touched.email ? errors.email : null}
+                errorMessage={
+                  errors.email && touched.email ? errors.email : null
+                }
                 errorStyle={styles.inputError}
-                label='メールアドレス'
-                value={values.email || ''}
-                placeholder='メールアドレスを入力'
-                onChangeText={handleChange('email')}
-                onBlur={handleBlur('email')}
+                label="メールアドレス"
+                value={values.email || ""}
+                placeholder="メールアドレスを入力"
+                onChangeText={handleChange("email")}
+                onBlur={handleBlur("email")}
               />
               <Button
                 loading={sending}
@@ -122,4 +141,4 @@ const mapDispatchToProps = {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(ResetPassword)
+)(ResetPassword);

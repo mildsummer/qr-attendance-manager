@@ -1,31 +1,38 @@
-import React, { Component } from 'react';
-import { TouchableWithoutFeedback, View, Keyboard, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { connect } from 'react-redux'
-import { Formik } from 'formik';
-import * as Yup from 'yup';
-import Input from '../common/Input';
-import Button from '../common/Button';
-import { signIn } from '../redux';
-import { VALIDATION_EMAIL, VALIDATION_PASSWORD } from '../common/validations';
-import colors from '../common/colors';
+import React, { Component } from "react";
+import {
+  TouchableWithoutFeedback,
+  View,
+  Keyboard,
+  Text,
+  TouchableOpacity,
+  StyleSheet
+} from "react-native";
+import { connect } from "react-redux";
+import { Formik } from "formik";
+import * as Yup from "yup";
+import Input from "../common/Input";
+import Button from "../common/Button";
+import { signIn } from "../redux";
+import { VALIDATION_EMAIL, VALIDATION_PASSWORD } from "../common/validations";
+import colors from "../common/colors";
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
     backgroundColor: colors.accent,
-    alignItems: 'center',
-    justifyContent: 'center'
+    alignItems: "center",
+    justifyContent: "center"
   },
   inputContainer: {
     marginBottom: 48
   },
   inputError: {
-    position: 'absolute',
-    width: '100%',
+    position: "absolute",
+    width: "100%",
     left: 0,
     bottom: -24,
-    textAlign: 'center',
+    textAlign: "center",
     margin: 0
   },
   submitButton: {
@@ -33,7 +40,7 @@ const styles = StyleSheet.create({
   },
   resetPassword: {
     marginTop: 2,
-    color: '#fff'
+    color: "#fff"
   }
 });
 
@@ -54,7 +61,7 @@ class Login extends Component {
     const { isAuthSubmitting } = this.props;
     return (
       <Formik
-        initialValues={{ email: '', password: '' }}
+        initialValues={{ email: "", password: "" }}
         onSubmit={this.signIn}
         validationSchema={Yup.object().shape({
           email: VALIDATION_EMAIL,
@@ -62,46 +69,62 @@ class Login extends Component {
         })}
         validateOnChange={false}
       >
-        {({ handleChange, handleSubmit, values, errors, touched, handleBlur, isValid }) => (
+        {({
+          handleChange,
+          handleSubmit,
+          values,
+          errors,
+          touched,
+          handleBlur,
+          isValid
+        }) => (
           <TouchableWithoutFeedback
             onPress={Keyboard.dismiss}
             accessible={false}
           >
             <View style={styles.container}>
               <Input
-                autoCapitalize='none'
-                autoCompleteType='email'
+                autoCapitalize="none"
+                autoCompleteType="email"
                 containerStyle={styles.inputContainer}
-                label='メールアドレス'
-                errorMessage={errors.email && touched.email ? errors.email : null}
+                label="メールアドレス"
+                errorMessage={
+                  errors.email && touched.email ? errors.email : null
+                }
                 errorStyle={styles.inputError}
                 value={values.email}
-                placeholder='メールアドレスを入力'
-                onChangeText={handleChange('email')}
-                onBlur={handleBlur('email')}
+                placeholder="メールアドレスを入力"
+                onChangeText={handleChange("email")}
+                onBlur={handleBlur("email")}
               />
               <Input
                 containerStyle={styles.inputContainer}
-                label='パスワード'
-                errorMessage={errors.password && touched.password ? errors.password : null}
+                label="パスワード"
+                errorMessage={
+                  errors.password && touched.password ? errors.password : null
+                }
                 errorStyle={styles.inputError}
                 value={values.password}
-                placeholder='パスワードを入力'
+                placeholder="パスワードを入力"
                 secureTextEntry={true}
-                autoCapitalize='none'
-                autoCompleteType='password'
-                onChangeText={handleChange('password')}
-                onBlur={handleBlur('password')}
+                autoCapitalize="none"
+                autoCompleteType="password"
+                onChangeText={handleChange("password")}
+                onBlur={handleBlur("password")}
               />
               <Button
-                title='ログイン / 新規登録'
+                title="ログイン / 新規登録"
                 style={styles.submitButton}
                 onPress={handleSubmit}
                 disabled={!values.email || !values.password || !isValid}
                 loading={isAuthSubmitting}
               />
-              <TouchableOpacity onPress={this.goTo('ResetPassword', { email: values.email })}>
-                <Text style={styles.resetPassword}>パスワードをお忘れの方はこちら</Text>
+              <TouchableOpacity
+                onPress={this.goTo("ResetPassword", { email: values.email })}
+              >
+                <Text style={styles.resetPassword}>
+                  パスワードをお忘れの方はこちら
+                </Text>
               </TouchableOpacity>
             </View>
           </TouchableWithoutFeedback>
@@ -122,4 +145,4 @@ const mapDispatchToProps = {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(Login)
+)(Login);
