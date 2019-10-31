@@ -6,7 +6,7 @@ import { createStackNavigator } from 'react-navigation-stack';
 import { createBottomTabNavigator } from 'react-navigation-tabs';
 import { connect, Provider } from 'react-redux'
 import Icon from "react-native-vector-icons/SimpleLineIcons";
-import Iconions from "react-native-vector-icons/Ionicons";
+import MaterialIcons from "react-native-vector-icons/MaterialCommunityIcons";
 import './js/utils/firebase';
 import { store } from './js/redux'
 import { auth } from "./js/utils/firebase";
@@ -68,21 +68,21 @@ const AppNavigator = createAppContainer(createSwitchNavigator({
             screen: User,
             navigationOptions:  {
               title: 'ホーム',
-              tabBarIcon: (<Icon name='user' size={17} />)
+              tabBarIcon: (<MaterialIcons name='qrcode-edit' size={18} />)
             }
           },
           Reader: {
             screen: Reader,
             navigationOptions:  {
               title: 'QR読み取り',
-              tabBarIcon: (<Iconions name='ios-qr-scanner' size={17} />)
+              tabBarIcon: (<MaterialIcons name='qrcode-scan' size={18} />)
             }
           },
           List: {
             screen: List,
             navigationOptions:  {
               title: '履歴',
-              tabBarIcon: (<Icon name='list' size={17} />)
+              tabBarIcon: (<MaterialIcons name='history' size={20} />)
             }
           }
         }, {
