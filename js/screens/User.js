@@ -101,7 +101,6 @@ class User extends Component {
   };
 
   sendName = () => {
-    console.log("send name");
     const { name } = this.state;
     const { sendName } = this.props;
     this.setState({ sendingName: true });
@@ -125,7 +124,6 @@ class User extends Component {
   render() {
     const { token, refreshToken, isCreatingToken } = this.props;
     const { user, name, sendingName } = this.state;
-    console.log(sendingName);
     return (
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
         <View style={styles.container}>

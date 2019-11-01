@@ -73,7 +73,6 @@ class ResetPassword extends Component {
 
   render() {
     const { sending } = this.state;
-    console.log(this.props.navigation.state.params.email);
     return (
       <Formik
         initialValues={{
