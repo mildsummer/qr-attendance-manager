@@ -150,9 +150,9 @@ class List extends Component {
 }
 
 const mapStateToProps = state => ({
-  dbUser: state.auth.dbData,
-  data: state.auth.history,
-  hasGetAll: state.auth.hasGetAllHistory
+  dbUser: state.user.data,
+  data: state.history.data,
+  hasGetAll: state.history.hasGetAll
 });
 
 const mapDispatchToProps = {

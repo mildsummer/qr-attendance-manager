@@ -7,7 +7,6 @@ import store from "./store";
 import AppNavigator from "./AppNavigator";
 import { auth, db } from "./utils/firebase";
 import { addChangeDateListener } from "./utils/onChangeDate";
-
 import { refreshToken } from "./actions";
 
 auth.onAuthStateChanged(user => {

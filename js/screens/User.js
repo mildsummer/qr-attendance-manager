@@ -173,9 +173,9 @@ class User extends Component {
 
 const mapStateToProps = state => ({
   user: state.auth.data,
-  dbData: state.auth.dbData,
-  token: state.auth.token,
-  isCreatingToken: state.auth.isCreatingToken
+  dbData: state.user.data,
+  token: state.user.token,
+  isCreatingToken: state.user.isCreatingToken
 });
 
 const mapDispatchToProps = {

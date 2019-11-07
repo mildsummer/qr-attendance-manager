@@ -176,9 +176,9 @@ class Reader extends Component {
 }
 
 const mapStateToProps = state => ({
-  isSendingHistory: state.auth.isSendingHistory,
-  historyLog: state.auth.historyLog,
-  sentHistory: state.auth.sentHistory
+  isSendingHistory: state.history.isSendingHistory,
+  historyLog: state.history.historyLog,
+  sentHistory: state.history.sentHistory
 });
 
 const mapDispatchToProps = {
