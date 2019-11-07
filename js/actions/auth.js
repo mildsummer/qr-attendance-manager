@@ -24,6 +24,19 @@ export const signIn = (email, password) => dispatch => {
   });
 };
 
+export const signOut = () => dispatch => {
+  dispatch({
+    type: "START_AUTH_USER"
+  });
+  auth.signOut().catch(({ message }) => {
+    Alert.alert("サインアウトに失敗しました", message);
+    dispatch({
+      type: "FAIL_SIGN_OUT",
+      message
+    });
+  });
+};
+
 export const sendPasswordResetEmail = email => () => {
   return auth.sendPasswordResetEmail(email);
 };
