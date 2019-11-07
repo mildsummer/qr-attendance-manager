@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { ThemeProvider } from "react-native-elements";
-import { connect, Provider } from "react-redux";
+import { Provider } from "react-redux";
 import "./utils/firebase";
 import store from "./store";
 import { auth, db } from "./utils/firebase";

@@ -32,6 +32,8 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         isCreatingToken: false
       };
+    case "SIGN_OUT_USER":
+      return INITIAL_STATE;
     default:
       return state;
   }

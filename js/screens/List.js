@@ -1,32 +1,14 @@
 import React, { Component } from "react";
-import {
-  View,
-  FlatList,
-  ActivityIndicator,
-  RefreshControl,
-  StyleSheet
-} from "react-native";
-import { ListItem } from "react-native-elements";
+import { View, ActivityIndicator, StyleSheet } from "react-native";
 import { connect } from "react-redux";
 import { getHistory, refreshHistory } from "../actions";
-import { HISTORY_TYPE_GUEST } from "../../functions/constants/common";
 import colors from "../constants/colors";
+import HistoryList from "../components/HistoryList";
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     height: "100%"
-  },
-  itemTitle: {
-    fontWeight: "500",
-    marginBottom: 4
-  },
-  itemSubtitle: {
-    color: "rgba(0, 0, 0, 0.5)"
-  },
-  footer: {
-    marginTop: 16,
-    marginBottom: 16
   },
   loading: {
     position: "absolute",
@@ -86,56 +68,16 @@ class List extends Component {
   render() {
     const { data, hasGetAll } = this.props;
     const { isLoading, isRefreshing } = this.state;
-    const isLoadingEnabled = !isLoading && !hasGetAll;
     return (
       <View style={styles.container}>
         {data ? (
-          <FlatList
+          <HistoryList
             data={data}
-            keyExtractor={item => item.id}
-            renderItem={({ item }) => {
-              const data = item.data();
-              const createdAt = new Date(data.createdAt.seconds * 1000);
-              const createdAtString = `${createdAt.getFullYear()}年${createdAt.getMonth() +
-                1}月${createdAt.getDate()}日 ${createdAt.getHours()}:${createdAt
-                .getMinutes()
-                .toString()
-                .padStart(2, "0")}`;
-              return (
-                <ListItem
-                  titleStyle={styles.itemTitle}
-                  title={
-                    data.type === HISTORY_TYPE_GUEST
-                      ? `${data.hostName || "名前なし"}(${data.email})`
-                      : `[${data.hostName || "名前なし"}]${data.guestName ||
-                          "名前なし"}さん(${data.email})`
-                  }
-                  subtitle={createdAtString}
-                  subtitleStyle={styles.itemSubtitle}
-                  bottomDivider
-                />
-              );
-            }}
-            onRefresh={this.refresh}
-            refreshing={isRefreshing}
-            onEndReached={isLoadingEnabled ? this.startLoading : null}
-            onEndReachedThreshold={0}
-            refreshControl={
-              <RefreshControl
-                refreshing={isRefreshing}
-                onRefresh={this.refresh}
-                tintColor={colors.accent}
-              />
-            }
-            ListFooterComponent={
-              hasGetAll ? null : (
-                <ActivityIndicator
-                  size="large"
-                  color={colors.accent}
-                  style={styles.footer}
-                />
-              )
-            }
+            hasGetAll={hasGetAll}
+            isLoading={isLoading}
+            isRefreshing={isRefreshing}
+            refresh={this.refresh}
+            startLoading={this.startLoading}
           />
         ) : (
           <ActivityIndicator

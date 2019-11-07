@@ -11,8 +11,8 @@ import { connect } from "react-redux";
 import { sendPasswordResetEmail } from "../actions";
 import { Formik } from "formik";
 import * as Yup from "yup";
-import Input from "../common/Input";
-import Button from "../common/Button";
+import Input from "../components/Input";
+import Button from "../components/Button";
 import { VALIDATION_EMAIL } from "../constants/validations";
 import colors from "../constants/colors";
 

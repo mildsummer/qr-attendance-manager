@@ -10,14 +10,14 @@ import {
 } from "react-native";
 import { connect } from "react-redux";
 import Icon from "react-native-vector-icons/SimpleLineIcons";
-import Input from "../common/Input";
+import Input from "../components/Input";
 import {
   sendPasswordResetEmail,
   verifyEmail,
   sendName,
   refreshToken
 } from "../actions";
-import QRCode from "../common/QRCode";
+import QRCode from "../components/QRCode";
 import colors from "../constants/colors";
 
 const styles = StyleSheet.create({

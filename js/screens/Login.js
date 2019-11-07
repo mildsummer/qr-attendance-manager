@@ -10,8 +10,8 @@ import {
 import { connect } from "react-redux";
 import { Formik } from "formik";
 import * as Yup from "yup";
-import Input from "../common/Input";
-import Button from "../common/Button";
+import Input from "../components/Input";
+import Button from "../components/Button";
 import { signIn } from "../actions";
 import {
   VALIDATION_EMAIL,
