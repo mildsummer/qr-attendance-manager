@@ -1,3 +1,3 @@
 export auth from "./auth";
-export user from './user';
-export history from './history';
+export user from "./user";
+export history from "./history";

@@ -1,7 +1,12 @@
 import React, { PureComponent } from "react";
-import firebase from 'firebase';
-import * as PropTypes from 'prop-types';
-import { FlatList, ActivityIndicator, RefreshControl, StyleSheet } from "react-native";
+import firebase from "firebase";
+import * as PropTypes from "prop-types";
+import {
+  FlatList,
+  ActivityIndicator,
+  RefreshControl,
+  StyleSheet
+} from "react-native";
 import { ListItem } from "react-native-elements";
 import { HISTORY_TYPE_GUEST } from "../../functions/constants/common";
 import colors from "../constants/colors";
@@ -29,7 +34,14 @@ const styles = StyleSheet.create({
 
 export default class HistoryList extends PureComponent {
   render() {
-    const { data, hasGetAll, isLoading, isRefreshing, refresh, startLoading } = this.props;
+    const {
+      data,
+      hasGetAll,
+      isLoading,
+      isRefreshing,
+      refresh,
+      startLoading
+    } = this.props;
     const isLoadingEnabled = !isLoading && !hasGetAll;
     return (
       <FlatList
@@ -39,7 +51,7 @@ export default class HistoryList extends PureComponent {
           const data = item.data();
           const createdAt = new Date(data.createdAt.seconds * 1000);
           const createdAtString = `${createdAt.getFullYear()}年${createdAt.getMonth() +
-          1}月${createdAt.getDate()}日 ${createdAt.getHours()}:${createdAt
+            1}月${createdAt.getDate()}日 ${createdAt.getHours()}:${createdAt
             .getMinutes()
             .toString()
             .padStart(2, "0")}`;
@@ -50,7 +62,7 @@ export default class HistoryList extends PureComponent {
                 data.type === HISTORY_TYPE_GUEST
                   ? `${data.hostName || "名前なし"}(${data.email})`
                   : `[${data.hostName || "名前なし"}]${data.guestName ||
-                  "名前なし"}さん(${data.email})`
+                      "名前なし"}さん(${data.email})`
               }
               subtitle={createdAtString}
               subtitleStyle={styles.itemSubtitle}
@@ -84,7 +96,9 @@ export default class HistoryList extends PureComponent {
 }
 
 HistoryList.propTypes = {
-  data: PropTypes.arrayOf(PropTypes.instanceOf(firebase.firestore.DocumentSnapshot)).isRequired,
+  data: PropTypes.arrayOf(
+    PropTypes.instanceOf(firebase.firestore.DocumentSnapshot)
+  ).isRequired,
   hasGetAll: PropTypes.bool.isRequired,
   isLoading: PropTypes.bool.isRequired,
   isRefreshing: PropTypes.bool.isRequired,

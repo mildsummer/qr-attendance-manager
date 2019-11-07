@@ -27,7 +27,7 @@ class AppContainer extends Component {
 
   navigate(routeName) {
     this.navigator &&
-    this.navigator.dispatch(NavigationActions.navigate({ routeName }));
+      this.navigator.dispatch(NavigationActions.navigate({ routeName }));
   }
 
   render() {
