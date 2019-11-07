@@ -1,16 +1,36 @@
 import React from "react";
-import renderer from "react-test-renderer";
+import configureMockStore from "redux-mock-store";
+import thunk from "redux-thunk";
+import firebase from './__mock__/firebase';
+import { setupAuthStateHandler } from './setup';
+import { INITIAL_STATE } from './reducers/auth';
 
-import App from "./setup";
+const mockStore = configureMockStore([thunk]);
+const db = firebase.firestore();
+const auth = firebase.auth();
+const store = mockStore({ auth: INITIAL_STATE });
 
-describe("<App />", () => {
-  let tree = null;
-  it("has 1 child", () => {
-    tree = renderer.create(<App />).toJSON();
-    expect(tree.children.length).toBe(1);
-  });
-
-  it("renders correctly", () => {
-    expect(tree).toMatchSnapshot();
+describe("setup", () => {
+  it("setup auth", () => {
+    const authData = {
+      uid: 'testUid',
+      provider: 'custom',
+      token: 'authToken',
+      expires: Math.floor(new Date() / 1000) + 24 * 60 * 60,
+      auth: {
+        isAdmin: true
+      }
+    };
+    db.collection('/users').add({
+      uid: authData.uid
+    });
+    db.collection('/users').flush();
+    setupAuthStateHandler({ auth, db, store });
+    auth.changeAuthState(authData);
+    auth.flush();
+    expect(store.getActions()).toEqual([{
+      type: "SUCCESS_AUTH_USER",
+      data: authData
+    }]);
   });
 });

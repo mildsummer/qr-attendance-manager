@@ -1,42 +1,30 @@
 import { db, functions } from "../utils/firebase";
-import { Alert } from "react-native";
 
-export const handleScanned = token => (dispatch, getState) => {
-  const dbData = getState().user.data;
-  dispatch({
-    type: "SEND_HISTORY",
-    token
-  });
-  functions
-    .httpsCallable("createHistory")({
-      token,
-      guestName: dbData ? dbData.name : null
-    })
-    .then(result => {
-      dispatch({
-        type: "SEND_HISTORY_SUCCESS",
-        data: result.data
-      });
-    })
-    .catch(({ message }) => {
-      Alert.alert(message);
-      dispatch({
-        type: "SEND_HISTORY_FAIL"
-      });
-    });
-};
+export const handleScanned = (token) => ({
+  type: "SEND_HISTORY",
+  data: token,
+  async: (store) => {
+    const dbData = store.getState().user.data;
+    return {
+      promise: functions.httpsCallable("createHistory")({
+        token,
+        guestName: dbData ? dbData.name : null
+      }),
+      data: (result) => (result.data),
+      alertOnError: true
+    };
+  }
+});
 
-export const confirmHistory = () => dispatch => {
-  dispatch({
-    type: "CONFIRM_HISTORY"
-  });
-};
+export const confirmHistory = () => ({
+  type: "CONFIRM_HISTORY"
+});
 
-export const getHistory = (size, startAfter) => (dispatch, getState) => {
-  const user = getState().auth.data;
-  if (user) {
-    let historyRef = db
-      .collection("/users")
+export const getHistory = (size, startAfter) => ({
+  type: "GET_HISTORY",
+  async: (store) => {
+    const user = store.getState().auth.data;
+    let historyRef = db.collection("/users")
       .doc(user.uid)
       .collection("/history")
       .orderBy("createdAt", "desc")
@@ -44,25 +32,22 @@ export const getHistory = (size, startAfter) => (dispatch, getState) => {
     if (startAfter) {
       historyRef = historyRef.startAfter(startAfter);
     }
-    historyRef
-      .get()
-      .then(querySnapshot => {
-        dispatch({
-          type: "SUCCESS_GET_HISTORY",
-          data: querySnapshot.docs,
-          hasGetAll: querySnapshot.docs.length < size
-        });
-      })
-      .catch(({ message }) => {
-        Alert.alert(message);
-      });
+    return {
+      promise: historyRef.get(),
+      data: (querySnapshot) => ({
+        docs: querySnapshot.docs,
+        hasGetAll: querySnapshot.docs.length < size
+      }),
+      alertOnError: true
+    };
   }
-};
+});
 
-export const refreshHistory = () => (dispatch, getState) => {
-  const user = getState().auth.data;
-  const history = getState().history.data;
-  if (user) {
+export const refreshHistory = () => ({
+  type: "REFRESH_HISTORY",
+  async: (store) => {
+    const user = store.getState().auth.data;
+    const history = store.getState().history.data;
     let historyRef = db
       .collection("/users")
       .doc(user.uid)
@@ -71,16 +56,10 @@ export const refreshHistory = () => (dispatch, getState) => {
     if (history && history.length) {
       historyRef = historyRef.endBefore(history[0]);
     }
-    historyRef
-      .get()
-      .then(querySnapshot => {
-        dispatch({
-          type: "REFRESH_HISTORY_SUCCESS",
-          data: querySnapshot.docs
-        });
-      })
-      .catch(({ message }) => {
-        Alert.alert(message);
-      });
+    return {
+      promise: historyRef.get(),
+      data: (querySnapshot) => (querySnapshot.docs),
+      alertOnError: true
+    }
   }
-};
+});

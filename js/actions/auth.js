@@ -1,41 +1,29 @@
 import { auth } from "../utils/firebase";
-import { Alert } from "react-native";
-import { FIREBASE_AUTH_DOMAIN } from "react-native-dotenv";
+// import { FIREBASE_AUTH_DOMAIN } from "react-native-dotenv";
 
-export const authUser = (email, password) => dispatch => {
-  dispatch({
-    type: "START_AUTH_USER"
-  });
-  auth.createUserWithEmailAndPassword(email, password).catch(({ message }) => {
-    Alert.alert("認証に失敗しました", message);
-    dispatch({
-      type: "FAIL_AUTH_USER",
-      message
-    });
-  });
-};
+export const authUser = (email, password) => ({
+  type: "AUTH_USER",
+  async: () => ({
+    promise: auth.createUserWithEmailAndPassword(email, password),
+    alertOnError: '認証に失敗しました'
+  })
+});
 
-export const signIn = (email, password) => dispatch => {
-  dispatch({
-    type: "START_AUTH_USER"
-  });
-  auth.signInWithEmailAndPassword(email, password).catch(() => {
-    authUser(email, password)(dispatch);
-  });
-};
+export const signIn = (email, password) => ({
+  type: "AUTH_USER",
+  async: () => ({
+    promise: auth.signInWithEmailAndPassword(email, password),
+    onError: authUser(email, password)
+  })
+});
 
-export const signOut = () => dispatch => {
-  dispatch({
-    type: "START_AUTH_USER"
-  });
-  auth.signOut().catch(({ message }) => {
-    Alert.alert("サインアウトに失敗しました", message);
-    dispatch({
-      type: "FAIL_SIGN_OUT",
-      message
-    });
-  });
-};
+export const signOut = () => ({
+  type: "SIGN_OUT",
+  async: () => ({
+    promise: auth.signOut(),
+    alertOnError: "サインアウトに失敗しました"
+  })
+});
 
 export const sendPasswordResetEmail = email => () => {
   return auth.sendPasswordResetEmail(email);

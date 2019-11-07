@@ -13,7 +13,6 @@ import Icon from "react-native-vector-icons/SimpleLineIcons";
 import Input from "../components/Input";
 import {
   sendPasswordResetEmail,
-  verifyEmail,
   sendName,
   refreshToken
 } from "../actions";
@@ -68,9 +67,7 @@ class User extends Component {
   state = {
     user: this.props.user,
     phoneNumber: null,
-    name: this.props.dbData ? this.props.dbData.name : "",
-    sendingName: false,
-    refreshing: false
+    name: this.props.dbData ? this.props.dbData.name : ""
   };
 
   componentDidMount() {
@@ -103,15 +100,7 @@ class User extends Component {
   sendName = () => {
     const { name } = this.state;
     const { sendName } = this.props;
-    this.setState({ sendingName: true });
-    sendName(name)
-      .then(() => {
-        this.setState({ sendingName: false });
-      })
-      .catch(({ message }) => {
-        Alert.alert(message);
-        this.setState({ sendingName: false });
-      });
+    sendName(name);
   };
 
   goTo = routeName => {
@@ -122,8 +111,8 @@ class User extends Component {
   };
 
   render() {
-    const { token, refreshToken, isCreatingToken } = this.props;
-    const { user, name, sendingName } = this.state;
+    const { token, refreshToken, isCreatingToken, isSendingName } = this.props;
+    const { user, name } = this.state;
     return (
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
         <View style={styles.container}>
@@ -135,7 +124,7 @@ class User extends Component {
               placeholder="タイトル/名前を入力"
               onChangeText={this.onChangeName}
             />
-            {sendingName ? (
+            {isSendingName ? (
               <ActivityIndicator
                 size="small"
                 color="#fff"
@@ -175,11 +164,11 @@ const mapStateToProps = state => ({
   user: state.auth.data,
   dbData: state.user.data,
   token: state.user.token,
-  isCreatingToken: state.user.isCreatingToken
+  isCreatingToken: state.user.isCreatingToken,
+  isSendingName: state.user.isSendingName
 });
 
 const mapDispatchToProps = {
-  verifyEmail,
   sendName,
   sendPasswordResetEmail,
   refreshToken

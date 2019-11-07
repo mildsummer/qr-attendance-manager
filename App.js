@@ -1,2 +1,2 @@
-import App from './js/setup';
+import App from './js/App';
 export default App;

@@ -8,15 +8,15 @@ const INITIAL_STATE = {
 
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
-    case "SUCCESS_GET_HISTORY":
+    case "GET_HISTORY/SUCCESS":
       return {
         ...state,
-        data: (state.data || []).concat(action.data),
-        hasGetAll: action.hasGetAll
+        data: (state.data || []).concat(action.data.docs),
+        hasGetAll: action.data.hasGetAll
       };
     case "SEND_HISTORY":
       const date = new Date().toDateString();
-      const { token } = action;
+      const token = action.data;
       return {
         ...state,
         isSendingHistory: true,
@@ -28,13 +28,13 @@ export default (state = INITIAL_STATE, action) => {
           }
         }
       };
-    case "SEND_HISTORY_SUCCESS":
+    case "SEND_HISTORY/SUCCESS":
       return {
         ...state,
         isSendingHistory: false,
         sentHistory: action.data
       };
-    case "SEND_HISTORY_FAIL":
+    case "SEND_HISTORY/FAIL":
       return {
         ...state,
         isSendingHistory: false
@@ -44,17 +44,17 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         sentHistory: null
       };
+    case "REFRESH_HISTORY/SUCCESS":
+      return {
+        ...state,
+        data: action.data.concat(state.data)
+      };
     case "CHANGE_DATE":
       return {
         ...state,
         historyLog: {}
       };
-    case "REFRESH_HISTORY_SUCCESS":
-      return {
-        ...state,
-        data: action.data.concat(state.data)
-      };
-    case "SIGN_OUT_USER":
+    case "SIGN_OUT":
       return INITIAL_STATE;
     default:
       return state;
