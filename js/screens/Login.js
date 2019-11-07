@@ -12,9 +12,12 @@ import { Formik } from "formik";
 import * as Yup from "yup";
 import Input from "../common/Input";
 import Button from "../common/Button";
-import { signIn } from "../redux";
-import { VALIDATION_EMAIL, VALIDATION_PASSWORD } from "../common/validations";
-import colors from "../common/colors";
+import { signIn } from "../actions";
+import {
+  VALIDATION_EMAIL,
+  VALIDATION_PASSWORD
+} from "../constants/validations";
+import colors from "../constants/colors";
 
 const styles = StyleSheet.create({
   container: {
@@ -135,7 +138,7 @@ class Login extends Component {
 }
 
 const mapStateToProps = state => ({
-  isAuthSubmitting: state.user.isAuthSubmitting
+  isAuthSubmitting: state.auth.isAuthSubmitting
 });
 
 const mapDispatchToProps = {

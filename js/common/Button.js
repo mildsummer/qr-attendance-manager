@@ -1,6 +1,6 @@
 import React, { PureComponent } from "react";
 import { Button } from "react-native-elements";
-import colors from "./colors";
+import colors from "../constants/colors";
 
 export default class CustomInput extends PureComponent {
   render() {

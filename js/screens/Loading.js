@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { View, ActivityIndicator, StyleSheet } from "react-native";
-import colors from "../common/colors";
+import colors from "../constants/colors";
 
 const styles = StyleSheet.create({
   container: {

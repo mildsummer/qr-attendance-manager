@@ -8,9 +8,9 @@ import {
 } from "react-native";
 import { ListItem } from "react-native-elements";
 import { connect } from "react-redux";
-import { getHistory, refreshHistory } from "../redux";
+import { getHistory, refreshHistory } from "../actions";
 import { HISTORY_TYPE_GUEST } from "../../functions/constants/common";
-import colors from "../common/colors";
+import colors from "../constants/colors";
 
 const styles = StyleSheet.create({
   container: {
@@ -150,9 +150,9 @@ class List extends Component {
 }
 
 const mapStateToProps = state => ({
-  dbUser: state.user.dbData,
-  data: state.user.history,
-  hasGetAll: state.user.hasGetAllHistory
+  dbUser: state.auth.dbData,
+  data: state.auth.history,
+  hasGetAll: state.auth.hasGetAllHistory
 });
 
 const mapDispatchToProps = {

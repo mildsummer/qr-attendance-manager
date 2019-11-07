@@ -8,13 +8,13 @@ import {
   StyleSheet
 } from "react-native";
 import { connect } from "react-redux";
-import { sendPasswordResetEmail } from "../redux";
+import { sendPasswordResetEmail } from "../actions";
 import { Formik } from "formik";
 import * as Yup from "yup";
 import Input from "../common/Input";
 import Button from "../common/Button";
-import { VALIDATION_EMAIL } from "../common/validations";
-import colors from "../common/colors";
+import { VALIDATION_EMAIL } from "../constants/validations";
+import colors from "../constants/colors";
 
 const styles = StyleSheet.create({
   container: {
@@ -130,7 +130,7 @@ class ResetPassword extends Component {
 }
 
 const mapStateToProps = state => ({
-  user: state.user.data
+  user: state.auth.data
 });
 
 const mapDispatchToProps = {

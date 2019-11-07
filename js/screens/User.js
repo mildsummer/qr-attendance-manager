@@ -16,9 +16,9 @@ import {
   verifyEmail,
   sendName,
   refreshToken
-} from "../redux";
+} from "../actions";
 import QRCode from "../common/QRCode";
-import colors from "../common/colors";
+import colors from "../constants/colors";
 
 const styles = StyleSheet.create({
   container: {
@@ -172,10 +172,10 @@ class User extends Component {
 }
 
 const mapStateToProps = state => ({
-  user: state.user.data,
-  dbData: state.user.dbData,
-  token: state.user.token,
-  isCreatingToken: state.user.isCreatingToken
+  user: state.auth.data,
+  dbData: state.auth.dbData,
+  token: state.auth.token,
+  isCreatingToken: state.auth.isCreatingToken
 });
 
 const mapDispatchToProps = {

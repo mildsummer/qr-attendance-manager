@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { handleScanned, confirmHistory } from "../redux";
+import { handleScanned, confirmHistory } from "../actions";
 import {
   View,
   TouchableWithoutFeedback,
@@ -176,9 +176,9 @@ class Reader extends Component {
 }
 
 const mapStateToProps = state => ({
-  isSendingHistory: state.user.isSendingHistory,
-  historyLog: state.user.historyLog,
-  sentHistory: state.user.sentHistory
+  isSendingHistory: state.auth.isSendingHistory,
+  historyLog: state.auth.historyLog,
+  sentHistory: state.auth.sentHistory
 });
 
 const mapDispatchToProps = {
