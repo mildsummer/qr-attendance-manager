@@ -1,13 +1,13 @@
 {
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
-    "start": "cp-cli js/firebase/product.js js/firebase/index.js && expo start",
-    "android": "cp-cli js/firebase/product.js js/firebase/index.js && expo start --android",
-    "ios": "cp-cli js/firebase/product.js js/firebase/index.js && expo start --ios",
-    "web": "cp-cli js/firebase/product.js js/firebase/index.js && expo start --web",
+    "start": "cp-cli js/firebase/_product.js js/firebase/index.js && expo start",
+    "android": "cp-cli js/firebase/_product.js js/firebase/index.js && expo start --android",
+    "ios": "cp-cli js/firebase/_product.js js/firebase/index.js && expo start --ios",
+    "web": "cp-cli js/firebase/_product.js js/firebase/index.js && expo start --web",
     "eject": "expo eject",
     "prettier": "prettier --write 'js/**/*.js'",
-    "test": "cp-cli js/firebase/mock.js js/firebase/index.js && jest"
+    "test": "cp-cli js/firebase/_mock.js js/firebase/index.js && jest"
   },
   "dependencies": {
     "expo": "^35.0.0",

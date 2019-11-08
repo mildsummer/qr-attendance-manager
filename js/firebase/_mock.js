@@ -8,7 +8,7 @@ const mocksdk = new firebasemock.MockFirebaseSdk(
   () => mockauth
 );
 
-// extend methods
+// extend mock methods
 MockFirestoreQuery.prototype.startAfter = function(startAfter) {
   const query = new MockFirestoreQuery(
     this.path,

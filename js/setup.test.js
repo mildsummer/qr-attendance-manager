@@ -1,7 +1,7 @@
 import React from "react";
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
-import firebase from "./firebase/mock";
+import firebase from "./firebase";
 import { setupAuthStateHandler } from "./setup";
 import { INITIAL_STATE } from "./reducers/auth";
 
