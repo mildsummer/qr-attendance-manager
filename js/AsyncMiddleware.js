@@ -1,4 +1,5 @@
 import { Alert } from "react-native";
+import { success, fail } from "./utils/actionTypeHelper";
 
 export default store => next => async action => {
   next(action);
@@ -26,7 +27,7 @@ export default store => next => async action => {
         data = result;
       }
       next({
-        type: `${action.type}/SUCCESS`,
+        type: success(action.type),
         data
       });
       if (typeof asyncOptions.success === "function") {
@@ -37,7 +38,7 @@ export default store => next => async action => {
     } catch (error) {
       console.error(error);
       next({
-        type: `${action.type}/FAIL`,
+        type: fail(action.type),
         error
       });
       if (asyncOptions.alertOnError) {
