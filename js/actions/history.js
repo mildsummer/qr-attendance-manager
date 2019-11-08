@@ -1,7 +1,12 @@
 import { db, functions } from "../firebase";
 
+export const SEND_HISTORY = "SEND_HISTORY";
+export const CONFIRM_HISTORY = "CONFIRM_HISTORY";
+export const GET_HISTORY = "GET_HISTORY";
+export const REFRESH_HISTORY = "REFRESH_HISTORY";
+
 export const sendHistory = token => ({
-  type: "SEND_HISTORY",
+  type: SEND_HISTORY,
   data: token,
   async: store => {
     const dbData = store.getState().user.data;
@@ -20,11 +25,11 @@ export const sendHistory = token => ({
 });
 
 export const confirmHistory = () => ({
-  type: "CONFIRM_HISTORY"
+  type: CONFIRM_HISTORY
 });
 
 export const getHistory = (size, startAfter) => ({
-  type: "GET_HISTORY",
+  type: GET_HISTORY,
   async: store => {
     const user = store.getState().auth.data;
     let historyRef = db
@@ -50,7 +55,7 @@ export const getHistory = (size, startAfter) => ({
 });
 
 export const refreshHistory = () => ({
-  type: "REFRESH_HISTORY",
+  type: REFRESH_HISTORY,
   async: store => {
     const user = store.getState().auth.data;
     const history = store.getState().history.data;

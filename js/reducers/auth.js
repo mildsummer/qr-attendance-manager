@@ -1,3 +1,6 @@
+import * as actions from "../actions";
+import { success, fail } from "../utils/actionTypeHelper";
+
 export const INITIAL_STATE = {
   init: false,
   isAuthSubmitting: false,
@@ -8,34 +11,34 @@ export const INITIAL_STATE = {
 
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
-    case "SIGN_UP":
+    case actions.SIGN_UP:
       return { ...state, isAuthSubmitting: true };
-    case "SIGN_IN":
+    case fail(actions.SIGN_UP):
+      return { ...state, isAuthSubmitting: false };
+    case actions.SIGN_IN:
       return { ...state, isAuthSubmitting: true };
-    case "AUTH_STATE_CHANGED":
+    case actions.AUTH_STATE_CHANGED:
       return {
         ...state,
         data: action.data,
         isAuthSubmitting: false,
         init: true
       };
-    case "AUTH_USER/FAIL":
-      return { ...state, data: action.data, isAuthSubmitting: false };
-    case "SIGN_OUT/SUCCESS":
+    case success(actions.SIGN_OUT):
       return INITIAL_STATE;
-    case "SEND_PASSWORD_RESET_EMAIL":
+    case actions.SEND_PASSWORD_RESET_EMAIL:
       return {
         ...state,
         isSendingHistoryPasswordResetEmail: true,
         hasSentPasswordResetEmail: false
       };
-    case "SEND_PASSWORD_RESET_EMAIL/SUCCESS":
+    case success(actions.SEND_PASSWORD_RESET_EMAIL):
       return {
         ...state,
         isSendingHistoryPasswordResetEmail: false,
         hasSentPasswordResetEmail: true
       };
-    case "SEND_PASSWORD_RESET_EMAIL/FAIL":
+    case fail(actions.SEND_PASSWORD_RESET_EMAIL):
       return {
         ...state,
         isSendingHistoryPasswordResetEmail: false,

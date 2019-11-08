@@ -10,7 +10,7 @@ const userData = {
 };
 
 describe("user actions", () => {
-  it("GET_USER", async () => {
+  it(actions.GET_USER, async () => {
     await db
       .collection("/users")
       .doc(uid)
@@ -22,7 +22,7 @@ describe("user actions", () => {
     expect(asyncOptions.data(result)).toEqual(result.data());
   });
 
-  it("SEND_NAME", () => {
+  it(actions.SEND_NAME, () => {
     const name = "testname";
     const asyncOptions = actions.sendName(name).async({
       getState: () => ({
@@ -37,9 +37,8 @@ describe("user actions", () => {
     expect(asyncOptions.data).toBe(name);
   });
 
-  it("CREATE_TOKEN", () => {
+  it(actions.CREATE_TOKEN, () => {
     const token = "testtoken";
-    const user = { name: "testname" };
     const asyncOptions = actions.createToken(token).async;
     expect(asyncOptions.func).toBe(functions.httpsCallable("createToken"));
     expect(asyncOptions.alertOnError).toBe("トークンの取得に失敗しました");

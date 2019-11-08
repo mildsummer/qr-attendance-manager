@@ -5,7 +5,7 @@ import * as actions from "./history";
 db.autoFlush();
 
 describe("history actions", () => {
-  it("SEND_HISTORY", () => {
+  it(actions.SEND_HISTORY, () => {
     const token = "testtoken";
     const user = { name: "testname" };
     const asyncOptions = actions.sendHistory(token).async({
@@ -22,7 +22,7 @@ describe("history actions", () => {
     expect(asyncOptions.data(result)).toEqual(result.data);
   });
 
-  it("GET_HISTORY: get all by 1 loading", () => {
+  it(`${actions.GET_HISTORY}: get all by 1 loading`, () => {
     const user = { uid: "testuid", name: "testname" };
     const size = 20;
     const asyncOptions = actions.getHistory(size).async({
@@ -49,7 +49,7 @@ describe("history actions", () => {
     });
   });
 
-  it("GET_HISTORY: not get all by 1 loading", () => {
+  it(`${actions.GET_HISTORY}: not get all by 1 loading`, () => {
     const user = { uid: "testuid", name: "testname" };
     const size = 20;
     const asyncOptions = actions.getHistory(size).async({
@@ -80,7 +80,7 @@ describe("history actions", () => {
     });
   });
 
-  it("GET_HISTORY: startAfter", async () => {
+  it(`${actions.GET_HISTORY}: startAfter`, async () => {
     const user = { uid: "testuid", name: "testname" };
     const size = 20;
     const dummyHistory = await db

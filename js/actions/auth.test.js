@@ -1,12 +1,11 @@
 import React from "react";
 import { auth } from "../firebase";
 import * as actions from "./auth";
-import { signUp } from "./auth";
 
 auth.autoFlush();
 
 describe("auth actions", () => {
-  it("SIGN_UP_USER", async () => {
+  it(actions.SIGN_UP, async () => {
     const credentials = {
       email: "user@example.com",
       password: "examplePass"
@@ -20,7 +19,7 @@ describe("auth actions", () => {
     });
   });
 
-  it("SIGN_IN_USER", async () => {
+  it(actions.SIGN_IN, async () => {
     const credentials = {
       email: "user2@example.com",
       password: "examplePass"
@@ -34,7 +33,7 @@ describe("auth actions", () => {
     });
   });
 
-  it("SIGN_OUT", async () => {
+  it(actions.SIGN_OUT, async () => {
     const asyncOptions = actions.signOut().async;
     expect(asyncOptions).toEqual({
       func: auth.signOut,
@@ -42,7 +41,7 @@ describe("auth actions", () => {
     });
   });
 
-  it("SEND_PASSWORD_RESET_EMAIL", async () => {
+  it(actions.SEND_PASSWORD_RESET_EMAIL, async () => {
     const email = "user@example.com";
     const asyncOptions = actions.sendPasswordResetEmail(email).async;
     expect(asyncOptions).toEqual({

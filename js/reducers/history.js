@@ -1,3 +1,6 @@
+import * as actions from "../actions";
+import { success, fail } from "../utils/actionTypeHelper";
+
 const INITIAL_STATE = {
   data: null,
   hasGetAll: false,
@@ -8,13 +11,13 @@ const INITIAL_STATE = {
 
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
-    case "GET_HISTORY/SUCCESS":
+    case success(actions.GET_HISTORY):
       return {
         ...state,
         data: (state.data || []).concat(action.data.docs),
         hasGetAll: action.data.hasGetAll
       };
-    case "SEND_HISTORY":
+    case actions.SEND_HISTORY:
       const date = new Date().toDateString();
       const token = action.data;
       return {
@@ -28,33 +31,33 @@ export default (state = INITIAL_STATE, action) => {
           }
         }
       };
-    case "SEND_HISTORY/SUCCESS":
+    case success(actions.SEND_HISTORY):
       return {
         ...state,
         isSendingHistory: false,
         sentHistory: action.data
       };
-    case "SEND_HISTORY/FAIL":
+    case fail(actions.SEND_HISTORY):
       return {
         ...state,
         isSendingHistory: false
       };
-    case "CONFIRM_HISTORY":
+    case actions.CONFIRM_HISTORY:
       return {
         ...state,
         sentHistory: null
       };
-    case "REFRESH_HISTORY/SUCCESS":
+    case success(actions.REFRESH_HISTORY):
       return {
         ...state,
         data: action.data.concat(state.data)
       };
-    case "CHANGE_DATE":
+    case actions.CHANGE_DATE:
       return {
         ...state,
         historyLog: {}
       };
-    case "SIGN_OUT":
+    case actions.SIGN_OUT:
       return INITIAL_STATE;
     default:
       return state;

@@ -1,3 +1,6 @@
+import * as actions from "../actions/user";
+import { success, fail } from "../utils/actionTypeHelper";
+
 const INITIAL_STATE = {
   data: null,
   token: null,
@@ -6,14 +9,14 @@ const INITIAL_STATE = {
 
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
-    case "GET_USER/SUCCESS":
+    case success(actions.GET_USER):
       return { ...state, data: action.data };
-    case "SEND_NAME":
+    case actions.SEND_NAME:
       return {
         ...state,
         isSendingName: true
       };
-    case "SEND_NAME/SUCCESS":
+    case success(actions.SEND_NAME):
       return {
         ...state,
         isSendingName: false,
@@ -22,28 +25,28 @@ export default (state = INITIAL_STATE, action) => {
           name: action.data
         }
       };
-    case "SEND_NAME/FAIL":
+    case fail(actions.SEND_NAME):
       return {
         ...state,
         isSendingName: false
       };
-    case "CREATE_TOKEN":
+    case actions.CREATE_TOKEN:
       return {
         ...state,
         isCreatingToken: true
       };
-    case "CREATE_TOKEN/SUCCESS":
+    case success(actions.CREATE_TOKEN):
       return {
         ...state,
         token: action.data,
         isCreatingToken: false
       };
-    case "CREATE_TOKEN/FAIL":
+    case fail(actions.CREATE_TOKEN):
       return {
         ...state,
         isCreatingToken: false
       };
-    case "SIGN_OUT":
+    case actions.SIGN_OUT:
       return INITIAL_STATE;
     default:
       return state;
