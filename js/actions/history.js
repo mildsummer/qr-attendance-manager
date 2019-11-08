@@ -7,10 +7,12 @@ export const sendHistory = token => ({
     const dbData = store.getState().user.data;
     return {
       func: functions.httpsCallable("createHistory"),
-      args: [{
-        token,
-        guestName: dbData ? dbData.name : null
-      }],
+      args: [
+        {
+          token,
+          guestName: dbData ? dbData.name : null
+        }
+      ],
       data: result => result.data,
       alertOnError: true
     };
@@ -37,7 +39,7 @@ export const getHistory = (size, startAfter) => ({
     }
     return {
       dbRef: historyRef,
-      dbMethod: 'get',
+      dbMethod: "get",
       data: querySnapshot => ({
         docs: querySnapshot.docs,
         hasGetAll: querySnapshot.docs.length < size
@@ -62,7 +64,7 @@ export const refreshHistory = () => ({
     }
     return {
       dbRef: historyRef,
-      dbMethod: 'get',
+      dbMethod: "get",
       data: querySnapshot => querySnapshot.docs,
       alertOnError: true
     };

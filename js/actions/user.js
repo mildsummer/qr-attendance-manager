@@ -3,21 +3,17 @@ import { db, functions } from "../firebase";
 export const getUser = uid => ({
   type: "GET_USER",
   async: {
-    dbRef: db
-      .collection("/users")
-      .doc(uid),
-    dbMethod: 'get',
+    dbRef: db.collection("/users").doc(uid),
+    dbMethod: "get",
     data: documentSnapshot => documentSnapshot.data()
   }
 });
 
 export const sendName = name => ({
   type: "SEND_NAME",
-  async: (store) => ({
-    dbRef: db
-      .collection("/users")
-      .doc(store.getState().auth.data.uid),
-    dbMethod: 'set',
+  async: store => ({
+    dbRef: db.collection("/users").doc(store.getState().auth.data.uid),
+    dbMethod: "set",
     args: [{ name }, { merge: true }],
     data: name
   })

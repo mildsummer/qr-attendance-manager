@@ -1,7 +1,7 @@
 import React from "react";
 import { auth } from "../firebase";
 import * as actions from "./auth";
-import {signUp} from "./auth";
+import { signUp } from "./auth";
 
 auth.autoFlush();
 
@@ -11,7 +11,8 @@ describe("auth actions", () => {
       email: "user@example.com",
       password: "examplePass"
     };
-    const asyncOptions = actions.signUp(credentials.email, credentials.password).async;
+    const asyncOptions = actions.signUp(credentials.email, credentials.password)
+      .async;
     expect(asyncOptions).toEqual({
       func: auth.createUserWithEmailAndPassword,
       args: [credentials.email, credentials.password],
@@ -24,7 +25,8 @@ describe("auth actions", () => {
       email: "user2@example.com",
       password: "examplePass"
     };
-    const asyncOptions = actions.signIn(credentials.email, credentials.password).async;
+    const asyncOptions = actions.signIn(credentials.email, credentials.password)
+      .async;
     expect(asyncOptions).toEqual({
       func: auth.signInWithEmailAndPassword,
       args: [credentials.email, credentials.password],

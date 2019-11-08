@@ -1,5 +1,5 @@
 import React from "react";
-import {db, functions} from "../firebase";
+import { db, functions } from "../firebase";
 import * as actions from "./user";
 
 db.autoFlush();
@@ -16,8 +16,8 @@ describe("user actions", () => {
       .doc(uid)
       .set(userData);
     const asyncOptions = actions.getUser(uid).async;
-    expect(db.collection('/users').doc(uid)).toEqual(asyncOptions.dbRef);
-    expect(asyncOptions.dbMethod).toBe('get');
+    expect(db.collection("/users").doc(uid)).toEqual(asyncOptions.dbRef);
+    expect(asyncOptions.dbMethod).toBe("get");
     const result = await asyncOptions.dbRef.get();
     expect(asyncOptions.data(result)).toEqual(result.data());
   });
@@ -31,19 +31,19 @@ describe("user actions", () => {
         }
       })
     });
-    expect(db.collection('/users').doc(uid)).toEqual(asyncOptions.dbRef);
-    expect(asyncOptions.dbMethod).toBe('set');
+    expect(db.collection("/users").doc(uid)).toEqual(asyncOptions.dbRef);
+    expect(asyncOptions.dbMethod).toBe("set");
     expect(asyncOptions.args).toEqual([{ name }, { merge: true }]);
     expect(asyncOptions.data).toBe(name);
   });
 
   it("CREATE_TOKEN", () => {
-    const token = 'testtoken';
-    const user = { name: 'testname' };
+    const token = "testtoken";
+    const user = { name: "testname" };
     const asyncOptions = actions.createToken(token).async;
-    expect(asyncOptions.func).toBe(functions.httpsCallable('createToken'));
-    expect(asyncOptions.alertOnError).toBe('トークンの取得に失敗しました');
-    const result = { data: 'dummy' };
+    expect(asyncOptions.func).toBe(functions.httpsCallable("createToken"));
+    expect(asyncOptions.alertOnError).toBe("トークンの取得に失敗しました");
+    const result = { data: "dummy" };
     expect(asyncOptions.data(result)).toEqual(result.data);
   });
 });
