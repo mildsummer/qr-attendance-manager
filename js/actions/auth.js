@@ -1,5 +1,5 @@
-import { auth } from "../firebase";
 // import { FIREBASE_AUTH_DOMAIN } from "react-native-dotenv";
+import { navigate } from "./common";
 
 export const SIGN_UP = "SIGN_UP";
 export const SIGN_IN = "SIGN_IN";
@@ -10,7 +10,8 @@ export const AUTH_STATE_CHANGED = "AUTH_STATE_CHANGED";
 export const signUp = (email, password) => ({
   type: SIGN_UP,
   async: {
-    func: auth.createUserWithEmailAndPassword,
+    auth: true,
+    func: "createUserWithEmailAndPassword",
     args: [email, password],
     alertOnError: "認証に失敗しました"
   }
@@ -19,7 +20,8 @@ export const signUp = (email, password) => ({
 export const signIn = (email, password) => ({
   type: SIGN_IN,
   async: {
-    func: auth.signInWithEmailAndPassword,
+    auth: true,
+    func: "signInWithEmailAndPassword",
     args: [email, password],
     onError: signUp(email, password)
   }
@@ -28,7 +30,8 @@ export const signIn = (email, password) => ({
 export const signOut = () => ({
   type: SIGN_OUT,
   async: {
-    func: auth.signOut,
+    auth: true,
+    func: "signOut",
     alertOnError: "サインアウトに失敗しました"
   }
 });
@@ -36,15 +39,19 @@ export const signOut = () => ({
 export const sendPasswordResetEmail = email => ({
   type: SEND_PASSWORD_RESET_EMAIL,
   async: {
-    func: auth.sendPasswordResetEmail,
+    auth: true,
+    func: "sendPasswordResetEmail",
     args: [email],
-    alertOnError: "メールの送信に失敗しました"
+    alertOnError: "メールの送信に失敗しました",
+    alertOnSuccess: "メールを送信しました",
+    onSuccess: navigate("Login")
   }
 });
 
 export const onStateChange = user => ({
   type: AUTH_STATE_CHANGED,
-  data: user
+  data: user,
+  navigate: user ? "User" : "Login"
 });
 
 // export const verifyEmail = () => (dispatch, getState) => {

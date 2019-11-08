@@ -1,4 +1,4 @@
-import { db, functions } from "../firebase";
+import { db } from "../firebase";
 
 export const GET_USER = "GET_USER";
 export const SEND_NAME = "SEND_NAME";
@@ -26,7 +26,7 @@ export const sendName = name => ({
 export const createToken = () => ({
   type: CREATE_TOKEN,
   async: {
-    func: functions.httpsCallable("createToken"),
+    func: "createToken",
     data: token => token.data,
     alertOnError: "トークンの取得に失敗しました"
   }

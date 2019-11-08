@@ -1,17 +1,14 @@
 import React from "react";
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
-import firebase from "./firebase";
+import { auth } from "./firebase";
 import { setupAuthStateHandler } from "./setup";
 import { INITIAL_STATE } from "./reducers/auth";
 
-const mockStore = configureMockStore([thunk]);
-const db = firebase.firestore();
-const auth = firebase.auth();
-const store = mockStore({ auth: INITIAL_STATE });
-
 describe("setup", () => {
   it("setup auth", () => {
+    const mockStore = configureMockStore([thunk]);
+    const store = mockStore({ auth: INITIAL_STATE });
     const authData = {
       uid: "testUid",
       provider: "custom",
@@ -21,11 +18,7 @@ describe("setup", () => {
         isAdmin: true
       }
     };
-    db.collection("/users").add({
-      uid: authData.uid
-    });
-    db.collection("/users").flush();
-    setupAuthStateHandler({ auth, db, store });
+    setupAuthStateHandler(store);
     auth.changeAuthState(authData);
     auth.flush();
     expect(store.getActions().map(action => action.type)).toEqual([

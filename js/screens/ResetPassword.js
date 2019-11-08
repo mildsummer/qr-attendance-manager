@@ -4,7 +4,6 @@ import {
   Text,
   View,
   Keyboard,
-  Alert,
   StyleSheet
 } from "react-native";
 import { connect } from "react-redux";
@@ -45,14 +44,6 @@ const styles = StyleSheet.create({
 });
 
 class ResetPassword extends Component {
-  componentWillReceiveProps(nextProps, nextContext) {
-    if (this.props.isSending && !nextProps.isSending && nextProps.hasSent) {
-      Alert.alert("メールを送信しました");
-      const { navigation } = this.props;
-      navigation.navigate("Login");
-    }
-  }
-
   submit = ({ email }) => {
     const { sendPasswordResetEmail } = this.props;
     sendPasswordResetEmail(email);

@@ -15,7 +15,7 @@ describe("history actions", () => {
         }
       })
     });
-    expect(asyncOptions.func).toBe(functions.httpsCallable("createHistory"));
+    expect(asyncOptions.func).toBe("createHistory");
     expect(asyncOptions.args).toEqual([{ token, guestName: user.name }]);
     expect(asyncOptions.alertOnError).toBe(true);
     const result = { data: "dummy" };

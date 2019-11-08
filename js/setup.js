@@ -1,6 +1,7 @@
+import { auth } from "./firebase";
 import { onStateChange, createToken, getUser } from "./actions";
 
-export const setupAuthStateHandler = ({ auth, db, store }) => {
+export const setupAuthStateHandler = store => {
   auth.onAuthStateChanged(user => {
     const current = store.getState().auth.data;
     store.dispatch(onStateChange(user));

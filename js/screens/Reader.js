@@ -124,11 +124,11 @@ class Reader extends Component {
   };
 
   handleScanned = result => {
-    const { handleScanned, isSendingHistory, historyLog } = this.props;
+    const { sendHistory, isSendingHistory, historyLog } = this.props;
     const date = new Date().toDateString();
     const token = result.data;
     if (!isSendingHistory && (!historyLog[date] || !historyLog[date][token])) {
-      handleScanned(token);
+      sendHistory(token);
     }
   };
 
@@ -182,7 +182,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = {
-  handleScanned: sendHistory,
+  sendHistory,
   confirmHistory
 };
 

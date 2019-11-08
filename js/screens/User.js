@@ -98,13 +98,6 @@ class User extends Component {
     sendName(name);
   };
 
-  goTo = routeName => {
-    return () => {
-      const { navigation } = this.props;
-      navigation.navigate(routeName);
-    };
-  };
-
   render() {
     const { token, refreshToken, isCreatingToken, isSendingName } = this.props;
     const { user, name } = this.state;

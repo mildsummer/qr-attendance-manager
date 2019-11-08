@@ -1,4 +1,4 @@
-import { db, functions } from "../firebase";
+import { db } from "../firebase";
 
 export const SEND_HISTORY = "SEND_HISTORY";
 export const CONFIRM_HISTORY = "CONFIRM_HISTORY";
@@ -11,7 +11,7 @@ export const sendHistory = token => ({
   async: store => {
     const dbData = store.getState().user.data;
     return {
-      func: functions.httpsCallable("createHistory"),
+      func: "createHistory",
       args: [
         {
           token,
@@ -39,7 +39,6 @@ export const getHistory = (size, startAfter) => ({
       .orderBy("createdAt", "desc")
       .limit(size);
     if (startAfter) {
-      console.log(historyRef);
       historyRef = historyRef.startAfter(startAfter);
     }
     return {

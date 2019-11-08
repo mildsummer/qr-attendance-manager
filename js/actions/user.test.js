@@ -40,7 +40,7 @@ describe("user actions", () => {
   it(actions.CREATE_TOKEN, () => {
     const token = "testtoken";
     const asyncOptions = actions.createToken(token).async;
-    expect(asyncOptions.func).toBe(functions.httpsCallable("createToken"));
+    expect(asyncOptions.func).toBe("createToken");
     expect(asyncOptions.alertOnError).toBe("トークンの取得に失敗しました");
     const result = { data: "dummy" };
     expect(asyncOptions.data(result)).toEqual(result.data);
