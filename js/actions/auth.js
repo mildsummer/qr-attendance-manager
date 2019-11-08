@@ -1,8 +1,8 @@
-import { auth } from "../utils/firebase";
+import { auth } from "../firebase";
 // import { FIREBASE_AUTH_DOMAIN } from "react-native-dotenv";
 
-export const authUser = (email, password) => ({
-  type: "AUTH_USER",
+export const signUp = (email, password) => ({
+  type: "SIGN_UP",
   async: () => ({
     promise: auth.createUserWithEmailAndPassword(email, password),
     alertOnError: '認証に失敗しました'
@@ -10,10 +10,10 @@ export const authUser = (email, password) => ({
 });
 
 export const signIn = (email, password) => ({
-  type: "AUTH_USER",
+  type: "SIGN_IN",
   async: () => ({
     promise: auth.signInWithEmailAndPassword(email, password),
-    onError: authUser(email, password)
+    onError: signUp(email, password)
   })
 });
 

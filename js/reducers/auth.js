@@ -6,7 +6,9 @@ export const INITIAL_STATE = {
 
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
-    case "AUTH_USER":
+    case "SIGN_UP":
+      return { ...state, isAuthSubmitting: true };
+    case "SIGN_IN":
       return { ...state, isAuthSubmitting: true };
     case "AUTH_STATE_CHANGED":
       return {

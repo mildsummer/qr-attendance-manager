@@ -1,4 +1,4 @@
-import { db, functions } from "../utils/firebase";
+import { db, functions } from "../firebase";
 
 export const handleScanned = (token) => ({
   type: "SEND_HISTORY",

@@ -1,7 +1,7 @@
 import React from "react";
 import configureMockStore from "redux-mock-store";
 import thunk from "redux-thunk";
-import firebase from './__mock__/firebase';
+import firebase from './firebase/mock';
 import { setupAuthStateHandler } from './setup';
 import { INITIAL_STATE } from './reducers/auth';
 
@@ -28,9 +28,6 @@ describe("setup", () => {
     setupAuthStateHandler({ auth, db, store });
     auth.changeAuthState(authData);
     auth.flush();
-    expect(store.getActions()).toEqual([{
-      type: "SUCCESS_AUTH_USER",
-      data: authData
-    }]);
+    expect(store.getActions().map((action) => (action.type))).toEqual(["AUTH_STATE_CHANGED", "GET_USER", "CREATE_TOKEN"]);
   });
 });

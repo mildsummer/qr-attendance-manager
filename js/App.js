@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import { ThemeProvider } from "react-native-elements";
 import { Provider } from "react-redux";
-import "./utils/firebase";
+import "./firebase";
 import store from "./store";
-import { auth, db } from "./utils/firebase";
+import { auth, db } from "./firebase";
 import AppContainer from "./AppContainer";
 import { setupAuthStateHandler } from './setup';
 import { addChangeDateListener } from './utils/onChangeDate';

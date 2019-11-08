@@ -1,4 +1,4 @@
-import { db, functions } from "../utils/firebase";
+import { db, functions } from "../firebase";
 
 export const getUser = (uid) => ({
   type: "GET_USER",
