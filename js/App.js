@@ -5,8 +5,8 @@ import "./firebase";
 import store from "./store";
 import { auth, db } from "./firebase";
 import AppContainer from "./AppContainer";
-import { setupAuthStateHandler } from './setup';
-import { addChangeDateListener } from './utils/onChangeDate';
+import { setupAuthStateHandler } from "./setup";
+import { addChangeDateListener } from "./utils/onChangeDate";
 
 // setup
 setupAuthStateHandler({ auth, db, store });

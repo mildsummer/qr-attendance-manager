@@ -1,16 +1,16 @@
 import { db, functions } from "../firebase";
 
-export const handleScanned = (token) => ({
+export const handleScanned = token => ({
   type: "SEND_HISTORY",
   data: token,
-  async: (store) => {
+  async: store => {
     const dbData = store.getState().user.data;
     return {
       promise: functions.httpsCallable("createHistory")({
         token,
         guestName: dbData ? dbData.name : null
       }),
-      data: (result) => (result.data),
+      data: result => result.data,
       alertOnError: true
     };
   }
@@ -22,9 +22,10 @@ export const confirmHistory = () => ({
 
 export const getHistory = (size, startAfter) => ({
   type: "GET_HISTORY",
-  async: (store) => {
+  async: store => {
     const user = store.getState().auth.data;
-    let historyRef = db.collection("/users")
+    let historyRef = db
+      .collection("/users")
       .doc(user.uid)
       .collection("/history")
       .orderBy("createdAt", "desc")
@@ -34,7 +35,7 @@ export const getHistory = (size, startAfter) => ({
     }
     return {
       promise: historyRef.get(),
-      data: (querySnapshot) => ({
+      data: querySnapshot => ({
         docs: querySnapshot.docs,
         hasGetAll: querySnapshot.docs.length < size
       }),
@@ -45,7 +46,7 @@ export const getHistory = (size, startAfter) => ({
 
 export const refreshHistory = () => ({
   type: "REFRESH_HISTORY",
-  async: (store) => {
+  async: store => {
     const user = store.getState().auth.data;
     const history = store.getState().history.data;
     let historyRef = db
@@ -58,8 +59,8 @@ export const refreshHistory = () => ({
     }
     return {
       promise: historyRef.get(),
-      data: (querySnapshot) => (querySnapshot.docs),
+      data: querySnapshot => querySnapshot.docs,
       alertOnError: true
-    }
+    };
   }
 });

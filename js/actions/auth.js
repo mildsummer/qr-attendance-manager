@@ -5,7 +5,7 @@ export const signUp = (email, password) => ({
   type: "SIGN_UP",
   async: () => ({
     promise: auth.createUserWithEmailAndPassword(email, password),
-    alertOnError: '認証に失敗しました'
+    alertOnError: "認証に失敗しました"
   })
 });
 
@@ -25,7 +25,7 @@ export const signOut = () => ({
   })
 });
 
-export const sendPasswordResetEmail = (email) => ({
+export const sendPasswordResetEmail = email => ({
   type: "SEND_PASSWORD_RESET_EMAIL",
   async: () => ({
     promise: auth.sendPasswordResetEmail(email),

@@ -24,12 +24,23 @@ export default (state = INITIAL_STATE, action) => {
     case "SIGN_OUT/SUCCESS":
       return INITIAL_STATE;
     case "SEND_PASSWORD_RESET_EMAIL":
-      console.log('sending');
-      return { ...state, isSendingHistoryPasswordResetEmail: true, hasSentPasswordResetEmail: false };
+      return {
+        ...state,
+        isSendingHistoryPasswordResetEmail: true,
+        hasSentPasswordResetEmail: false
+      };
     case "SEND_PASSWORD_RESET_EMAIL/SUCCESS":
-      return { ...state, isSendingHistoryPasswordResetEmail: false, hasSentPasswordResetEmail: true };
+      return {
+        ...state,
+        isSendingHistoryPasswordResetEmail: false,
+        hasSentPasswordResetEmail: true
+      };
     case "SEND_PASSWORD_RESET_EMAIL/FAIL":
-      return { ...state, isSendingHistoryPasswordResetEmail: false, hasSentPasswordResetEmail: false };
+      return {
+        ...state,
+        isSendingHistoryPasswordResetEmail: false,
+        hasSentPasswordResetEmail: false
+      };
     default:
       return state;
   }

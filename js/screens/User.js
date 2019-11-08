@@ -11,11 +11,7 @@ import {
 import { connect } from "react-redux";
 import Icon from "react-native-vector-icons/SimpleLineIcons";
 import Input from "../components/Input";
-import {
-  sendPasswordResetEmail,
-  sendName,
-  refreshToken
-} from "../actions";
+import { sendPasswordResetEmail, sendName, refreshToken } from "../actions";
 import QRCode from "../components/QRCode";
 import colors from "../constants/colors";
 
