@@ -2,40 +2,42 @@ import { Alert } from "react-native";
 import { auth, functions } from "./firebase";
 import { success, fail } from "./utils/actionTypeHelper";
 
+const getAsync = asyncOptions => {
+  if (asyncOptions.dbRef) {
+    // firestore
+    return asyncOptions.dbRef[asyncOptions.dbMethod || "get"](
+      ...(asyncOptions.args || [])
+    );
+  } else if (asyncOptions.func) {
+    if (asyncOptions.auth) {
+      // firebase auth
+      return auth[asyncOptions.func](...(asyncOptions.args || []));
+    } else {
+      // firebase functions
+      return functions.httpsCallable(asyncOptions.func)(
+        ...(asyncOptions.args || [])
+      );
+    }
+  } else {
+    throw new Error("invalid async option");
+  }
+};
+
+const createData = (result, asyncOptions) =>
+  typeof asyncOptions.data === "function"
+    ? asyncOptions.data(result)
+    : asyncOptions.data || result;
+
 const AsyncMiddleware = store => next => async action => {
   next(action);
   if (action.async) {
     const asyncOptions =
       typeof action.async === "function" ? action.async(store) : action.async;
-    let result = null;
     try {
-      if (asyncOptions.dbRef) {
-        // firestore
-        result = await asyncOptions.dbRef[asyncOptions.dbMethod || "get"](
-          ...(asyncOptions.args || [])
-        );
-      } else if (asyncOptions.func) {
-        if (asyncOptions.auth) {
-          // firebase auth
-          result = await auth[asyncOptions.func](...(asyncOptions.args || []));
-        } else {
-          // firebase functions
-          result = await functions.httpsCallable(asyncOptions.func)(
-            ...(asyncOptions.args || [])
-          );
-        }
-      }
-      let data = null;
-      if (typeof asyncOptions.data === "function") {
-        data = asyncOptions.data(result);
-      } else if (asyncOptions.data) {
-        data = asyncOptions.data;
-      } else {
-        data = result;
-      }
+      let result = await getAsync(asyncOptions);
       next({
         type: success(action.type),
-        data
+        data: createData(result, asyncOptions)
       });
       if (asyncOptions.alertOnSuccess) {
         Alert.alert(asyncOptions.alertOnSuccess);

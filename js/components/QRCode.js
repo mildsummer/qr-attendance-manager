@@ -1,9 +1,9 @@
-import React from "react";
+import React, { PureComponent } from "react";
 import PropTypes from "prop-types";
 import { View, Image, ActivityIndicator } from "react-native";
 import qrcode from "qrcode-generator";
 
-export default class QRCode extends React.PureComponent {
+export default class QRCode extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
