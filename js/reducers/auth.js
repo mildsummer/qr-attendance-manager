@@ -1,6 +1,8 @@
 export const INITIAL_STATE = {
   init: false,
   isAuthSubmitting: false,
+  isSendingHistoryPasswordResetEmail: false,
+  hasSentPasswordResetEmail: false,
   data: null
 };
 
@@ -21,6 +23,13 @@ export default (state = INITIAL_STATE, action) => {
       return { ...state, data: action.data, isAuthSubmitting: false };
     case "SIGN_OUT/SUCCESS":
       return INITIAL_STATE;
+    case "SEND_PASSWORD_RESET_EMAIL":
+      console.log('sending');
+      return { ...state, isSendingHistoryPasswordResetEmail: true, hasSentPasswordResetEmail: false };
+    case "SEND_PASSWORD_RESET_EMAIL/SUCCESS":
+      return { ...state, isSendingHistoryPasswordResetEmail: false, hasSentPasswordResetEmail: true };
+    case "SEND_PASSWORD_RESET_EMAIL/FAIL":
+      return { ...state, isSendingHistoryPasswordResetEmail: false, hasSentPasswordResetEmail: false };
     default:
       return state;
   }

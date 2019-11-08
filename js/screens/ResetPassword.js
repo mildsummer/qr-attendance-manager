@@ -45,34 +45,21 @@ const styles = StyleSheet.create({
 });
 
 class ResetPassword extends Component {
-  state = {
-    sending: false
-  };
+  componentWillReceiveProps(nextProps, nextContext) {
+    if (this.props.isSending && !nextProps.isSending && nextProps.hasSent) {
+      Alert.alert("メールを送信しました");
+      const { navigation } = this.props;
+      navigation.navigate("Login");
+    }
+  }
 
   submit = ({ email }) => {
     const { sendPasswordResetEmail } = this.props;
-    this.setState({ sending: true });
-    sendPasswordResetEmail(email)
-      .then(() => {
-        this.setState({ sending: false });
-        Alert.alert("メールを送信しました");
-        this.goTo("Login")();
-      })
-      .catch(() => {
-        Alert.alert("メールの送信に失敗しました");
-        this.setState({ sending: false });
-      });
-  };
-
-  goTo = routeName => {
-    return () => {
-      const { navigation } = this.props;
-      navigation.navigate(routeName);
-    };
+    sendPasswordResetEmail(email);
   };
 
   render() {
-    const { sending } = this.state;
+    const { isSending } = this.props;
     return (
       <Formik
         initialValues={{
@@ -116,7 +103,7 @@ class ResetPassword extends Component {
                 onBlur={handleBlur("email")}
               />
               <Button
-                loading={sending}
+                loading={isSending}
                 title="メール送信"
                 disabled={!values.email || !isValid}
                 onPress={handleSubmit}
@@ -130,7 +117,8 @@ class ResetPassword extends Component {
 }
 
 const mapStateToProps = state => ({
-  user: state.auth.data
+  isSending: state.auth.isSendingHistoryPasswordResetEmail,
+  hasSent: state.auth.hasSentPasswordResetEmail
 });
 
 const mapDispatchToProps = {

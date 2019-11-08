@@ -66,7 +66,6 @@ const styles = StyleSheet.create({
 class User extends Component {
   state = {
     user: this.props.user,
-    phoneNumber: null,
     name: this.props.dbData ? this.props.dbData.name : ""
   };
 

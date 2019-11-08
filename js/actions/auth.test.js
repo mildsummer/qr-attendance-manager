@@ -32,4 +32,8 @@ describe("auth actions", () => {
   it("SIGN_OUT", async () => {
     await actions.signOut().async().promise;
   });
+
+  // it("SEND_PASSWORD_RESET_EMAIL", async () => {
+  //   await actions.sendPasswordResetEmail('mild.summer.y@gmail.com').async().promise;
+  // });
 });

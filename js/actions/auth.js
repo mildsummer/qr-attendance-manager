@@ -25,9 +25,13 @@ export const signOut = () => ({
   })
 });
 
-export const sendPasswordResetEmail = email => () => {
-  return auth.sendPasswordResetEmail(email);
-};
+export const sendPasswordResetEmail = (email) => ({
+  type: "SEND_PASSWORD_RESET_EMAIL",
+  async: () => ({
+    promise: auth.sendPasswordResetEmail(email),
+    alertOnError: "メールの送信に失敗しました"
+  })
+});
 
 // export const verifyEmail = () => (dispatch, getState) => {
 //   const user = getState().auth.data;
