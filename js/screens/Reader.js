@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { handleScanned, confirmHistory } from "../actions";
+import { sendHistory, confirmHistory } from "../actions";
 import {
   View,
   TouchableWithoutFeedback,
@@ -182,7 +182,7 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = {
-  handleScanned,
+  handleScanned: sendHistory,
   confirmHistory
 };
 

@@ -1,15 +1,16 @@
 import { db, functions } from "../firebase";
 
-export const handleScanned = token => ({
+export const sendHistory = token => ({
   type: "SEND_HISTORY",
   data: token,
   async: store => {
     const dbData = store.getState().user.data;
     return {
-      promise: functions.httpsCallable("createHistory")({
+      func: functions.httpsCallable("createHistory"),
+      args: [{
         token,
         guestName: dbData ? dbData.name : null
-      }),
+      }],
       data: result => result.data,
       alertOnError: true
     };
@@ -31,10 +32,12 @@ export const getHistory = (size, startAfter) => ({
       .orderBy("createdAt", "desc")
       .limit(size);
     if (startAfter) {
+      console.log(historyRef);
       historyRef = historyRef.startAfter(startAfter);
     }
     return {
-      promise: historyRef.get(),
+      dbRef: historyRef,
+      dbMethod: 'get',
       data: querySnapshot => ({
         docs: querySnapshot.docs,
         hasGetAll: querySnapshot.docs.length < size
@@ -58,7 +61,8 @@ export const refreshHistory = () => ({
       historyRef = historyRef.endBefore(history[0]);
     }
     return {
-      promise: historyRef.get(),
+      dbRef: historyRef,
+      dbMethod: 'get',
       data: querySnapshot => querySnapshot.docs,
       alertOnError: true
     };

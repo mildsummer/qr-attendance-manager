@@ -2,31 +2,32 @@ import { db, functions } from "../firebase";
 
 export const getUser = uid => ({
   type: "GET_USER",
-  async: () => ({
-    promise: db
+  async: {
+    dbRef: db
       .collection("/users")
-      .doc(uid)
-      .get(),
+      .doc(uid),
+    dbMethod: 'get',
     data: documentSnapshot => documentSnapshot.data()
-  })
+  }
 });
 
 export const sendName = name => ({
   type: "SEND_NAME",
-  async: store => ({
-    promise: db
+  async: (store) => ({
+    dbRef: db
       .collection("/users")
-      .doc(store.getState().auth.data.uid)
-      .set({ name }, { merge: true }),
+      .doc(store.getState().auth.data.uid),
+    dbMethod: 'set',
+    args: [{ name }, { merge: true }],
     data: name
   })
 });
 
-export const refreshToken = () => ({
+export const createToken = () => ({
   type: "CREATE_TOKEN",
-  async: () => ({
-    promise: functions.httpsCallable("createToken")(),
+  async: {
+    func: functions.httpsCallable("createToken"),
     data: token => token.data,
     alertOnError: "トークンの取得に失敗しました"
-  })
+  }
 });

@@ -3,34 +3,37 @@ import { auth } from "../firebase";
 
 export const signUp = (email, password) => ({
   type: "SIGN_UP",
-  async: () => ({
-    promise: auth.createUserWithEmailAndPassword(email, password),
+  async: {
+    func: auth.createUserWithEmailAndPassword,
+    args: [email, password],
     alertOnError: "認証に失敗しました"
-  })
+  }
 });
 
 export const signIn = (email, password) => ({
   type: "SIGN_IN",
-  async: () => ({
-    promise: auth.signInWithEmailAndPassword(email, password),
+  async: {
+    func: auth.signInWithEmailAndPassword,
+    args: [email, password],
     onError: signUp(email, password)
-  })
+  }
 });
 
 export const signOut = () => ({
   type: "SIGN_OUT",
-  async: () => ({
-    promise: auth.signOut(),
+  async: {
+    func: auth.signOut,
     alertOnError: "サインアウトに失敗しました"
-  })
+  }
 });
 
 export const sendPasswordResetEmail = email => ({
   type: "SEND_PASSWORD_RESET_EMAIL",
-  async: () => ({
-    promise: auth.sendPasswordResetEmail(email),
+  async: {
+    func: auth.sendPasswordResetEmail,
+    args: [email],
     alertOnError: "メールの送信に失敗しました"
-  })
+  }
 });
 
 // export const verifyEmail = () => (dispatch, getState) => {

@@ -1,4 +1,4 @@
-import { refreshToken, getUser } from "./actions";
+import { createToken, getUser } from "./actions";
 
 export const setupAuthStateHandler = ({ auth, db, store }) => {
   auth.onAuthStateChanged(user => {
@@ -10,7 +10,7 @@ export const setupAuthStateHandler = ({ auth, db, store }) => {
     });
     if (!current && user) {
       store.dispatch(getUser(user.uid));
-      store.dispatch(refreshToken());
+      store.dispatch(createToken());
     }
   });
 };

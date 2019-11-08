@@ -2,8 +2,14 @@ import { Alert } from "react-native";
 
 export default store => next => action => {
   if (action.async) {
-    const asyncOptions = action.async(store);
-    asyncOptions.promise
+    const asyncOptions = typeof action.async === 'function' ? action.async(store) : action.async;
+    let promise = null;
+    if (asyncOptions.dbRef) {
+      promise = asyncOptions.dbRef[asyncOptions.dbMethod || 'get'](...(asyncOptions.args || []));
+    } else if (asyncOptions.func) {
+      promise = asyncOptions.func(...(asyncOptions.args || []));
+    }
+    promise
       .then((...results) => {
         let data = null;
         if (typeof asyncOptions.data === "function") {
