@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import AppNavigator from "./navigators";
 import { signOut } from "./actions";
-import { setTopLevelNavigator } from "./NavigateMiddleware";
+import { setTopLevelNavigator } from "./middlewares/NavigateMiddleware";
 
 class AppContainer extends Component {
   render() {
