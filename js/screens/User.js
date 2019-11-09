@@ -101,7 +101,7 @@ class User extends Component {
               />
             ) : null}
           </View>
-          <Text style={styles.email}>{user.email}</Text>
+          <Text style={styles.email}>{user && user.email}</Text>
           <View style={styles.qrWrapper}>
             {token ? (
               <QRCode data={token} size="100%" errorCorrectionLevel="H" />

@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { PureComponent } from "react";
 import {
   TouchableWithoutFeedback,
   Text,
@@ -43,20 +43,17 @@ const styles = StyleSheet.create({
   }
 });
 
-class ResetPassword extends Component {
-  submit = ({ email }) => {
-    const { sendPasswordResetEmail } = this.props;
-    sendPasswordResetEmail(email);
-  };
-
+class ResetPassword extends PureComponent {
   render() {
-    const { isSending } = this.props;
+    const { sendPasswordResetEmail, isSending } = this.props;
     return (
       <Formik
         initialValues={{
           email: this.props.navigation.state.params.email || ""
         }}
-        onSubmit={this.submit}
+        onSubmit={({ email }) => {
+          sendPasswordResetEmail(email);
+        }}
         validationSchema={Yup.object().shape({
           email: VALIDATION_EMAIL
         })}
@@ -108,8 +105,7 @@ class ResetPassword extends Component {
 }
 
 const mapStateToProps = state => ({
-  isSending: state.auth.isSendingHistoryPasswordResetEmail,
-  hasSent: state.auth.hasSentPasswordResetEmail
+  isSending: state.auth.isSendingHistoryPasswordResetEmail
 });
 
 const mapDispatchToProps = {

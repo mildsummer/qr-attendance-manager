@@ -12,7 +12,7 @@ import { Formik } from "formik";
 import * as Yup from "yup";
 import Input from "../components/Input";
 import Button from "../components/Button";
-import { signIn } from "../actions";
+import { signIn, navigate } from "../actions";
 import {
   VALIDATION_EMAIL,
   VALIDATION_PASSWORD
@@ -48,24 +48,14 @@ const styles = StyleSheet.create({
 });
 
 class Login extends Component {
-  signIn = ({ email, password }) => {
-    const { signIn } = this.props;
-    signIn(email, password);
-  };
-
-  goTo = (routeName, params = {}) => {
-    return () => {
-      const { navigation } = this.props;
-      navigation.navigate({ routeName, params });
-    };
-  };
-
   render() {
-    const { isAuthSubmitting } = this.props;
+    const { navigate, signIn, isAuthSubmitting } = this.props;
     return (
       <Formik
         initialValues={{ email: "", password: "" }}
-        onSubmit={this.signIn}
+        onSubmit={({ email, password }) => {
+          signIn(email, password);
+        }}
         validationSchema={Yup.object().shape({
           email: VALIDATION_EMAIL,
           password: VALIDATION_PASSWORD
@@ -123,7 +113,12 @@ class Login extends Component {
                 loading={isAuthSubmitting}
               />
               <TouchableOpacity
-                onPress={this.goTo("ResetPassword", { email: values.email })}
+                onPress={() => {
+                  navigate({
+                    routeName: "ResetPassword",
+                    params: { email: values.email }
+                  });
+                }}
               >
                 <Text style={styles.resetPassword}>
                   パスワードをお忘れの方はこちら
@@ -142,7 +137,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = {
-  signIn
+  signIn,
+  navigate
 };
 
 export default connect(

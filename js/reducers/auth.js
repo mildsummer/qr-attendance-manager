@@ -5,7 +5,6 @@ export const INITIAL_STATE = {
   init: false,
   isAuthSubmitting: false,
   isSendingHistoryPasswordResetEmail: false,
-  hasSentPasswordResetEmail: false,
   data: null
 };
 
@@ -29,20 +28,17 @@ export default (state = INITIAL_STATE, action) => {
     case actions.SEND_PASSWORD_RESET_EMAIL:
       return {
         ...state,
-        isSendingHistoryPasswordResetEmail: true,
-        hasSentPasswordResetEmail: false
+        isSendingHistoryPasswordResetEmail: true
       };
     case success(actions.SEND_PASSWORD_RESET_EMAIL):
       return {
         ...state,
-        isSendingHistoryPasswordResetEmail: false,
-        hasSentPasswordResetEmail: true
+        isSendingHistoryPasswordResetEmail: false
       };
     case fail(actions.SEND_PASSWORD_RESET_EMAIL):
       return {
         ...state,
-        isSendingHistoryPasswordResetEmail: false,
-        hasSentPasswordResetEmail: false
+        isSendingHistoryPasswordResetEmail: false
       };
     default:
       return state;

@@ -1,7 +1,7 @@
 export const CHANGE_DATE = "CHANGE_DATE";
 export const NAVIGATE = "NAVIGATE";
 
-export const navigate = routeName => ({
+export const navigate = config => ({
   type: NAVIGATE,
-  navigate: routeName
+  navigate: config
 });
