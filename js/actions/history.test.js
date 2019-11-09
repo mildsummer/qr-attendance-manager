@@ -19,7 +19,7 @@ describe("history actions", () => {
     expect(asyncOptions.args).toEqual([{ token, guestName: user.name }]);
     expect(asyncOptions.alertOnError).toBe(true);
     const result = { data: "dummy" };
-    expect(asyncOptions.data(result)).toEqual(result.data);
+    expect(asyncOptions.payload(result)).toEqual(result.data);
   });
 
   it(`${actions.GET_HISTORY}: get all by 1 loading`, () => {
@@ -43,7 +43,7 @@ describe("history actions", () => {
     expect(asyncOptions.dbMethod).toBe("get");
     expect(asyncOptions.alertOnError).toBe(true);
     const result = { docs: ["dummy"] };
-    expect(asyncOptions.data(result)).toEqual({
+    expect(asyncOptions.payload(result)).toEqual({
       docs: result.docs,
       hasGetAll: true
     });
@@ -74,7 +74,7 @@ describe("history actions", () => {
       docs.push("dummy");
     }
     const result = { docs };
-    expect(asyncOptions.data(result)).toEqual({
+    expect(asyncOptions.payload(result)).toEqual({
       docs: result.docs,
       hasGetAll: false
     });
@@ -111,7 +111,7 @@ describe("history actions", () => {
     expect(asyncOptions.dbMethod).toBe("get");
     expect(asyncOptions.alertOnError).toBe(true);
     const result = { docs: ["dummy"] };
-    expect(asyncOptions.data(result)).toEqual({
+    expect(asyncOptions.payload(result)).toEqual({
       docs: result.docs,
       hasGetAll: true
     });
@@ -139,7 +139,7 @@ describe("history actions", () => {
     expect(asyncOptions.dbMethod).toBe("get");
     expect(asyncOptions.alertOnError).toBe(true);
     const result = { docs: ["dummy"] };
-    expect(asyncOptions.data(result)).toBe(result.docs);
+    expect(asyncOptions.payload(result)).toBe(result.docs);
   });
 
   it(`${actions.REFRESH_HISTORY}: has already get history`, () => {
@@ -166,6 +166,6 @@ describe("history actions", () => {
     expect(asyncOptions.dbMethod).toBe("get");
     expect(asyncOptions.alertOnError).toBe(true);
     const result = { docs: ["dummy"] };
-    expect(asyncOptions.data(result)).toBe(result.docs);
+    expect(asyncOptions.payload(result)).toBe(result.docs);
   });
 });

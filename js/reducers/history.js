@@ -16,7 +16,7 @@ export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case actions.SEND_HISTORY:
       const date = new Date().toDateString();
-      const token = action.data;
+      const token = action.payload;
       return {
         ...state,
         isSendingHistory: true,
@@ -36,7 +36,7 @@ export default (state = INITIAL_STATE, action) => {
     case success(actions.ASK_CAMERA_PERMISSION):
       return {
         ...state,
-        hasCameraPermission: action.data.status === "granted",
+        hasCameraPermission: action.payload.status === "granted",
         askingCameraPermission: false
       };
     case fail(actions.ASK_CAMERA_PERMISSION):
@@ -58,8 +58,8 @@ export default (state = INITIAL_STATE, action) => {
     case success(actions.GET_HISTORY):
       return {
         ...state,
-        data: (state.data || []).concat(action.data.docs),
-        hasGetAll: action.data.hasGetAll,
+        data: (state.data || []).concat(action.payload.docs),
+        hasGetAll: action.payload.hasGetAll,
         isLoading: false,
         isRefreshing: false
       };
@@ -71,7 +71,7 @@ export default (state = INITIAL_STATE, action) => {
     case success(actions.REFRESH_HISTORY):
       return {
         ...state,
-        data: action.data.concat(state.data),
+        data: action.payload.concat(state.data),
         isRefreshing: false
       };
     case actions.CHANGE_DATE:

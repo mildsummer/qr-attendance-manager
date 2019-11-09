@@ -10,13 +10,13 @@ export const getUser = uid => ({
   async: {
     dbRef: db.collection("/users").doc(uid),
     dbMethod: "get",
-    data: documentSnapshot => documentSnapshot.data()
+    payload: documentSnapshot => documentSnapshot.data()
   }
 });
 
 export const changeName = name => ({
   type: CHANGE_NAME,
-  data: name
+  payload: name
 });
 
 export const sendName = () => ({
@@ -27,7 +27,7 @@ export const sendName = () => ({
       dbRef: db.collection("/users").doc(store.getState().auth.data.uid),
       dbMethod: "set",
       args: [{ name }, { merge: true }],
-      data: name
+      payload: name
     };
   }
 });
@@ -36,7 +36,7 @@ export const createToken = () => ({
   type: CREATE_TOKEN,
   async: {
     func: "createToken",
-    data: token => token.data,
+    payload: token => token.data,
     alertOnError: "トークンの取得に失敗しました"
   }
 });

@@ -16,7 +16,7 @@ export default (state = INITIAL_STATE, action) => {
     case success(actions.ASK_CAMERA_PERMISSION):
       return {
         ...state,
-        hasCameraPermission: action.data.status === "granted",
+        hasCameraPermission: action.payload.status === "granted",
         askingCameraPermission: false
       };
     case fail(actions.ASK_CAMERA_PERMISSION):

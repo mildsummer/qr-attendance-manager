@@ -19,7 +19,7 @@ describe("user actions", () => {
     expect(db.collection("/users").doc(uid)).toEqual(asyncOptions.dbRef);
     expect(asyncOptions.dbMethod).toBe("get");
     const result = await asyncOptions.dbRef.get();
-    expect(asyncOptions.data(result)).toEqual(result.data());
+    expect(asyncOptions.payload(result)).toEqual(result.data());
   });
 
   it(actions.CHANGE_NAME, () => {
@@ -27,7 +27,7 @@ describe("user actions", () => {
     const action = actions.changeName(name);
     expect(action).toEqual({
       type: actions.CHANGE_NAME,
-      data: name
+      payload: name
     });
   });
 
@@ -44,7 +44,7 @@ describe("user actions", () => {
     expect(db.collection("/users").doc(uid)).toEqual(asyncOptions.dbRef);
     expect(asyncOptions.dbMethod).toBe("set");
     expect(asyncOptions.args).toEqual([{ name }, { merge: true }]);
-    expect(asyncOptions.data).toBe(name);
+    expect(asyncOptions.payload).toBe(name);
   });
 
   it(actions.CREATE_TOKEN, () => {
@@ -53,6 +53,6 @@ describe("user actions", () => {
     expect(asyncOptions.func).toBe("createToken");
     expect(asyncOptions.alertOnError).toBe("トークンの取得に失敗しました");
     const result = { data: "dummy" };
-    expect(asyncOptions.data(result)).toEqual(result.data);
+    expect(asyncOptions.payload(result)).toEqual(result.data);
   });
 });

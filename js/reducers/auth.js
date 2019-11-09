@@ -19,7 +19,7 @@ export default (state = INITIAL_STATE, action) => {
     case actions.AUTH_STATE_CHANGED:
       return {
         ...state,
-        data: action.data,
+        data: action.payload,
         isAuthSubmitting: false,
         init: true
       };

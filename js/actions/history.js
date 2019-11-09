@@ -6,7 +6,7 @@ export const REFRESH_HISTORY = "REFRESH_HISTORY";
 
 export const sendHistory = token => ({
   type: SEND_HISTORY,
-  data: token,
+  payload: token,
   async: store => {
     const dbData = store.getState().user.data;
     return {
@@ -17,7 +17,7 @@ export const sendHistory = token => ({
           guestName: dbData ? dbData.name : null
         }
       ],
-      data: result => result.data,
+      payload: result => result.data,
       alertOnSuccess: result => [
         "読み取りに成功しました",
         `${result.data.hostName}(${result.data.email})`
@@ -43,7 +43,7 @@ export const getHistory = (size, startAfter) => ({
     return {
       dbRef: historyRef,
       dbMethod: "get",
-      data: querySnapshot => ({
+      payload: querySnapshot => ({
         docs: querySnapshot.docs,
         hasGetAll: querySnapshot.docs.length < size
       }),
@@ -68,7 +68,7 @@ export const refreshHistory = () => ({
     return {
       dbRef: historyRef,
       dbMethod: "get",
-      data: querySnapshot => querySnapshot.docs,
+      payload: querySnapshot => querySnapshot.docs,
       alertOnError: true
     };
   }

@@ -64,13 +64,13 @@ describe("auth actions", () => {
     let action = actions.onStateChange(user);
     expect(action).toEqual({
       type: AUTH_STATE_CHANGED,
-      data: user,
+      payload: user,
       navigate: "User"
     });
     action = actions.onStateChange(null);
     expect(action).toEqual({
       type: AUTH_STATE_CHANGED,
-      data: null,
+      payload: null,
       navigate: "Login"
     });
   });

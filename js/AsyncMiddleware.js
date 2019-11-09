@@ -25,10 +25,10 @@ const getAsync = asyncOptions => {
   }
 };
 
-const createData = (result, asyncOptions) =>
-  typeof asyncOptions.data === "function"
-    ? asyncOptions.data(result)
-    : asyncOptions.data || result;
+const createPayload = (result, asyncOptions) =>
+  typeof asyncOptions.payload === "function"
+    ? asyncOptions.payload(result)
+    : asyncOptions.payload || result;
 
 const alert = (alertOnResult, resultOrError) => {
   if (typeof alertOnResult === "function") {
@@ -52,7 +52,7 @@ const AsyncMiddleware = store => next => async action => {
       let result = await getAsync(asyncOptions);
       next({
         type: success(action.type),
-        data: createData(result, asyncOptions)
+        payload: createPayload(result, asyncOptions)
       });
       if (asyncOptions.alertOnSuccess) {
         alert(asyncOptions.alertOnSuccess, result);

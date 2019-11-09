@@ -13,8 +13,8 @@ export default (state = INITIAL_STATE, action) => {
     case success(actions.GET_USER):
       return {
         ...state,
-        data: action.data,
-        name: action.data.name
+        data: action.payload,
+        name: action.payload.name
       };
     case actions.SEND_NAME:
       return {
@@ -24,7 +24,7 @@ export default (state = INITIAL_STATE, action) => {
     case actions.CHANGE_NAME:
       return {
         ...state,
-        name: action.data
+        name: action.payload
       };
     case success(actions.SEND_NAME):
       return {
@@ -32,7 +32,7 @@ export default (state = INITIAL_STATE, action) => {
         isSendingName: false,
         data: {
           ...state.data,
-          name: action.data
+          name: action.payload
         }
       };
     case fail(actions.SEND_NAME):
@@ -48,7 +48,7 @@ export default (state = INITIAL_STATE, action) => {
     case success(actions.CREATE_TOKEN):
       return {
         ...state,
-        token: action.data,
+        token: action.payload,
         isCreatingToken: false
       };
     case fail(actions.CREATE_TOKEN):

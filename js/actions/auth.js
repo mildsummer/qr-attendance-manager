@@ -50,7 +50,7 @@ export const sendPasswordResetEmail = email => ({
 
 export const onStateChange = user => ({
   type: AUTH_STATE_CHANGED,
-  data: user,
+  payload: user,
   navigate: user ? "User" : "Login"
 });
 
