@@ -2,6 +2,7 @@ import { db } from "../firebase";
 
 export const GET_USER = "GET_USER";
 export const SEND_NAME = "SEND_NAME";
+export const CHANGE_NAME = "CHANGE_NAME";
 export const CREATE_TOKEN = "CREATE_TOKEN";
 
 export const getUser = uid => ({
@@ -13,14 +14,22 @@ export const getUser = uid => ({
   }
 });
 
-export const sendName = name => ({
+export const changeName = name => ({
+  type: CHANGE_NAME,
+  data: name
+});
+
+export const sendName = () => ({
   type: SEND_NAME,
-  async: store => ({
-    dbRef: db.collection("/users").doc(store.getState().auth.data.uid),
-    dbMethod: "set",
-    args: [{ name }, { merge: true }],
-    data: name
-  })
+  async: store => {
+    const name = store.getState().user.name;
+    return {
+      dbRef: db.collection("/users").doc(store.getState().auth.data.uid),
+      dbMethod: "set",
+      args: [{ name }, { merge: true }],
+      data: name
+    };
+  }
 });
 
 export const createToken = () => ({

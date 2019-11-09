@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import {
   Text,
   View,
-  Alert,
   TouchableWithoutFeedback,
   Keyboard,
   ActivityIndicator,
@@ -11,7 +10,12 @@ import {
 import { connect } from "react-redux";
 import Icon from "react-native-vector-icons/SimpleLineIcons";
 import Input from "../components/Input";
-import { sendPasswordResetEmail, sendName, createToken } from "../actions";
+import {
+  sendPasswordResetEmail,
+  sendName,
+  changeName,
+  createToken
+} from "../actions";
 import QRCode from "../components/QRCode";
 import colors from "../constants/colors";
 
@@ -60,47 +64,24 @@ const styles = StyleSheet.create({
 });
 
 class User extends Component {
-  state = {
-    user: this.props.user,
-    name: this.props.dbData ? this.props.dbData.name : ""
-  };
-
-  componentDidMount() {
-    const { user } = this.state;
-    if (!user.emailVerified) {
-      // this.props.verifyEmail();
-    }
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.user && nextProps.user !== this.state.user) {
-      this.setState({
-        user: nextProps.user,
-        name: ""
-      });
-    }
-    if (nextProps.dbData && !this.props.dbData) {
-      this.setState({ name: nextProps.dbData.name });
-    }
-  }
-
   onChangeName = name => {
-    this.setState({ name });
+    const { changeName, sendName } = this.props;
+    changeName(name);
     clearTimeout(this.changeNameTimer);
     this.changeNameTimer = setTimeout(() => {
-      this.sendName();
+      sendName();
     }, 1000);
   };
 
-  sendName = () => {
-    const { name } = this.state;
-    const { sendName } = this.props;
-    sendName(name);
-  };
-
   render() {
-    const { token, refreshToken, isCreatingToken, isSendingName } = this.props;
-    const { user, name } = this.state;
+    const {
+      user,
+      token,
+      refreshToken,
+      name,
+      isCreatingToken,
+      isSendingName
+    } = this.props;
     return (
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
         <View style={styles.container}>
@@ -150,7 +131,7 @@ class User extends Component {
 
 const mapStateToProps = state => ({
   user: state.auth.data,
-  dbData: state.user.data,
+  name: state.user.name,
   token: state.user.token,
   isCreatingToken: state.user.isCreatingToken,
   isSendingName: state.user.isSendingName
@@ -158,6 +139,7 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {
   sendName,
+  changeName,
   sendPasswordResetEmail,
   refreshToken: createToken
 };

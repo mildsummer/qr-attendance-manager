@@ -22,13 +22,23 @@ describe("user actions", () => {
     expect(asyncOptions.data(result)).toEqual(result.data());
   });
 
+  it(actions.CHANGE_NAME, () => {
+    const name = "testname";
+    const action = actions.changeName(name);
+    expect(action).toEqual({
+      type: actions.CHANGE_NAME,
+      data: name
+    });
+  });
+
   it(actions.SEND_NAME, () => {
     const name = "testname";
     const asyncOptions = actions.sendName(name).async({
       getState: () => ({
         auth: {
           data: { uid }
-        }
+        },
+        user: { name }
       })
     });
     expect(db.collection("/users").doc(uid)).toEqual(asyncOptions.dbRef);
