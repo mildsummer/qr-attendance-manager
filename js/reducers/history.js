@@ -5,18 +5,15 @@ const INITIAL_STATE = {
   data: null,
   hasGetAll: false,
   isSendingHistory: false,
-  sentHistory: null,
-  historyLog: {}
+  isLoading: false,
+  isRefreshing: false,
+  historyLog: {},
+  hasCameraPermission: false,
+  askingCameraPermission: false
 };
 
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
-    case success(actions.GET_HISTORY):
-      return {
-        ...state,
-        data: (state.data || []).concat(action.data.docs),
-        hasGetAll: action.data.hasGetAll
-      };
     case actions.SEND_HISTORY:
       const date = new Date().toDateString();
       const token = action.data;
@@ -31,26 +28,51 @@ export default (state = INITIAL_STATE, action) => {
           }
         }
       };
+    case actions.ASK_CAMERA_PERMISSION:
+      return {
+        ...state,
+        askingCameraPermission: true
+      };
+    case success(actions.ASK_CAMERA_PERMISSION):
+      return {
+        ...state,
+        hasCameraPermission: action.data.status === "granted",
+        askingCameraPermission: false
+      };
+    case fail(actions.ASK_CAMERA_PERMISSION):
+      return {
+        ...state,
+        hasCameraPermission: false,
+        askingCameraPermission: false
+      };
     case success(actions.SEND_HISTORY):
       return {
         ...state,
-        isSendingHistory: false,
-        sentHistory: action.data
+        isSendingHistory: false
       };
     case fail(actions.SEND_HISTORY):
       return {
         ...state,
         isSendingHistory: false
       };
-    case actions.CONFIRM_HISTORY:
+    case success(actions.GET_HISTORY):
       return {
         ...state,
-        sentHistory: null
+        data: (state.data || []).concat(action.data.docs),
+        hasGetAll: action.data.hasGetAll,
+        isLoading: false,
+        isRefreshing: false
+      };
+    case actions.REFRESH_HISTORY:
+      return {
+        ...state,
+        isRefreshing: true
       };
     case success(actions.REFRESH_HISTORY):
       return {
         ...state,
-        data: action.data.concat(state.data)
+        data: action.data.concat(state.data),
+        isRefreshing: false
       };
     case actions.CHANGE_DATE:
       return {

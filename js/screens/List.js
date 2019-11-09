@@ -20,11 +20,6 @@ const styles = StyleSheet.create({
 });
 
 class List extends Component {
-  state = {
-    isLoading: false,
-    isRefreshing: false
-  };
-
   componentDidMount() {
     const { data } = this.props;
     if (!data) {
@@ -32,42 +27,19 @@ class List extends Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.data !== this.props.data) {
-      this.setState({
-        isLoading: false,
-        isRefreshing: false
-      });
-    }
-  }
-
   startLoading = () => {
     const { data, getHistory } = this.props;
-    this.setState(
-      {
-        isLoading: true
-      },
-      () => {
-        getHistory(20, data && data.length ? data[data.length - 1] : null);
-      }
-    );
-  };
-
-  refresh = () => {
-    const { refreshHistory } = this.props;
-    this.setState(
-      {
-        isRefreshing: true
-      },
-      () => {
-        refreshHistory();
-      }
-    );
+    getHistory(20, data && data.length ? data[data.length - 1] : null);
   };
 
   render() {
-    const { data, hasGetAll } = this.props;
-    const { isLoading, isRefreshing } = this.state;
+    const {
+      data,
+      hasGetAll,
+      refreshHistory,
+      isLoading,
+      isRefreshing
+    } = this.props;
     return (
       <View style={styles.container}>
         {data ? (
@@ -76,7 +48,7 @@ class List extends Component {
             hasGetAll={hasGetAll}
             isLoading={isLoading}
             isRefreshing={isRefreshing}
-            refresh={this.refresh}
+            refresh={refreshHistory}
             startLoading={this.startLoading}
           />
         ) : (
@@ -94,7 +66,9 @@ class List extends Component {
 const mapStateToProps = state => ({
   dbUser: state.user.data,
   data: state.history.data,
-  hasGetAll: state.history.hasGetAll
+  hasGetAll: state.history.hasGetAll,
+  isLoading: state.history.isLoading,
+  isRefreshing: state.history.isRefreshing
 });
 
 const mapDispatchToProps = {

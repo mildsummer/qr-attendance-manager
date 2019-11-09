@@ -1,5 +1,5 @@
 import React from "react";
-import { db, functions } from "../firebase";
+import { db } from "../firebase";
 import * as actions from "./history";
 
 db.autoFlush();
@@ -115,5 +115,57 @@ describe("history actions", () => {
       docs: result.docs,
       hasGetAll: true
     });
+  });
+
+  it(`${actions.REFRESH_HISTORY}: first history`, () => {
+    const user = { uid: "testuid", name: "testname" };
+    const asyncOptions = actions.refreshHistory().async({
+      getState: () => ({
+        auth: {
+          data: user
+        },
+        history: {
+          data: null
+        }
+      })
+    });
+    expect(asyncOptions.dbRef).toEqual(
+      db
+        .collection("/users")
+        .doc(user.uid)
+        .collection("/history")
+        .orderBy("createdAt", "desc")
+    );
+    expect(asyncOptions.dbMethod).toBe("get");
+    expect(asyncOptions.alertOnError).toBe(true);
+    const result = { docs: ["dummy"] };
+    expect(asyncOptions.data(result)).toBe(result.docs);
+  });
+
+  it(`${actions.REFRESH_HISTORY}: has already get history`, () => {
+    const user = { uid: "testuid", name: "testname" };
+    const history = [{ hostName: "dummy", guestName: "dummy" }];
+    const asyncOptions = actions.refreshHistory().async({
+      getState: () => ({
+        auth: {
+          data: user
+        },
+        history: {
+          data: history
+        }
+      })
+    });
+    expect(asyncOptions.dbRef).toEqual(
+      db
+        .collection("/users")
+        .doc(user.uid)
+        .collection("/history")
+        .orderBy("createdAt", "desc")
+        .endBefore(history[0])
+    );
+    expect(asyncOptions.dbMethod).toBe("get");
+    expect(asyncOptions.alertOnError).toBe(true);
+    const result = { docs: ["dummy"] };
+    expect(asyncOptions.data(result)).toBe(result.docs);
   });
 });

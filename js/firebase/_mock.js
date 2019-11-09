@@ -19,6 +19,16 @@ MockFirestoreQuery.prototype.startAfter = function(startAfter) {
   query.startAfter = startAfter;
   return query;
 };
+MockFirestoreQuery.prototype.endBefore = function(endBefore) {
+  const query = new MockFirestoreQuery(
+    this.path,
+    this._getData(),
+    this.parent,
+    this.id
+  );
+  query.endBefore = endBefore;
+  return query;
+};
 
 export const auth = mocksdk.auth();
 export const db = mocksdk.firestore();

@@ -1,14 +1,12 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { sendHistory, confirmHistory } from "../actions";
+import { sendHistory, askCameraPermission } from "../actions";
 import {
   View,
   TouchableWithoutFeedback,
-  Alert,
   ActivityIndicator,
   StyleSheet
 } from "react-native";
-import * as Permissions from "expo-permissions";
 import { Camera } from "expo-camera";
 import { BarCodeScanner } from "expo-barcode-scanner";
 
@@ -87,39 +85,32 @@ const styles = StyleSheet.create({
 
 class Reader extends Component {
   state = {
-    hasCameraPermission: null,
     paused: false
   };
 
-  async componentDidMount() {
-    const { navigation } = this.props;
-    const { status } = await Permissions.askAsync(Permissions.CAMERA);
-    this.setState({
-      hasCameraPermission: status === "granted"
-    });
-    this.focusListener = navigation.addListener("didFocus", this.onFocus);
+  componentDidMount() {
+    this.focusListener = this.props.navigation.addListener(
+      "didFocus",
+      this.onFocus
+    );
   }
 
   componentWillUnmount() {
     this.focusListener.remove();
   }
 
-  componentWillReceiveProps(nextProps, nextContext) {
-    const { sentHistory, confirmHistory } = nextProps;
-    if (sentHistory) {
-      Alert.alert(
-        "読み取りに成功しました",
-        `${sentHistory.hostName}(${sentHistory.email})`
-      );
-      confirmHistory();
-    }
-  }
-
   onFocus = () => {
+    const {
+      hasCameraPermission,
+      askCameraPermission,
+      askingCameraPermission
+    } = this.props;
     const { paused } = this.state;
     if (paused) {
-      this.camera.resumePreview();
-      this.setState({ paused: false });
+      this.toggle();
+    }
+    if (!hasCameraPermission && !askingCameraPermission) {
+      askCameraPermission();
     }
   };
 
@@ -178,12 +169,14 @@ class Reader extends Component {
 const mapStateToProps = state => ({
   isSendingHistory: state.history.isSendingHistory,
   historyLog: state.history.historyLog,
-  sentHistory: state.history.sentHistory
+  sentHistory: state.history.sentHistory,
+  hasCameraPermission: state.common.hasCameraPermission,
+  askingCameraPermission: state.common.askingCameraPermission
 });
 
 const mapDispatchToProps = {
   sendHistory,
-  confirmHistory
+  askCameraPermission
 };
 
 export default connect(

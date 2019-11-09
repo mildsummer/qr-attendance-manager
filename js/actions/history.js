@@ -1,7 +1,6 @@
 import { db } from "../firebase";
 
 export const SEND_HISTORY = "SEND_HISTORY";
-export const CONFIRM_HISTORY = "CONFIRM_HISTORY";
 export const GET_HISTORY = "GET_HISTORY";
 export const REFRESH_HISTORY = "REFRESH_HISTORY";
 
@@ -19,13 +18,13 @@ export const sendHistory = token => ({
         }
       ],
       data: result => result.data,
+      alertOnSuccess: result => [
+        "読み取りに成功しました",
+        `${result.data.hostName}(${result.data.email})`
+      ],
       alertOnError: true
     };
   }
-});
-
-export const confirmHistory = () => ({
-  type: CONFIRM_HISTORY
 });
 
 export const getHistory = (size, startAfter) => ({

@@ -12,11 +12,13 @@ const getAsync = asyncOptions => {
     if (asyncOptions.auth) {
       // firebase auth
       return auth[asyncOptions.func](...(asyncOptions.args || []));
-    } else {
+    } else if (typeof asyncOptions.func === "string") {
       // firebase functions
       return functions.httpsCallable(asyncOptions.func)(
         ...(asyncOptions.args || [])
       );
+    } else {
+      return asyncOptions.func(...(asyncOptions.args || []));
     }
   } else {
     throw new Error("invalid async option");
@@ -27,6 +29,19 @@ const createData = (result, asyncOptions) =>
   typeof asyncOptions.data === "function"
     ? asyncOptions.data(result)
     : asyncOptions.data || result;
+
+const alert = (alertOnResult, resultOrError) => {
+  if (typeof alertOnResult === "function") {
+    const args = alertOnResult(resultOrError);
+    if (args && args.length) {
+      Alert.alert(...args);
+    }
+  } else {
+    Alert.alert(
+      typeof alertOnResult === "string" ? alertOnResult : resultOrError.message
+    );
+  }
+};
 
 const AsyncMiddleware = store => next => async action => {
   next(action);
@@ -40,7 +55,7 @@ const AsyncMiddleware = store => next => async action => {
         data: createData(result, asyncOptions)
       });
       if (asyncOptions.alertOnSuccess) {
-        Alert.alert(asyncOptions.alertOnSuccess);
+        alert(asyncOptions.alertOnSuccess, result);
       }
       if (typeof asyncOptions.onSuccess === "function") {
         asyncOptions.onSuccess(result);
@@ -54,7 +69,7 @@ const AsyncMiddleware = store => next => async action => {
         error
       });
       if (asyncOptions.alertOnError) {
-        Alert.alert(asyncOptions.alertOnError || error.message);
+        alert(asyncOptions.alertOnError, error);
       }
       if (typeof asyncOptions.onError === "function") {
         asyncOptions.onError(error);
