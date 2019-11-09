@@ -7,7 +7,7 @@
     "web": "cp-cli js/firebase/_product.js js/firebase/index.js && expo start --web",
     "eject": "expo eject",
     "prettier": "prettier --write 'js/**/*.js'",
-    "test": "cp-cli js/firebase/_mock.js js/firebase/index.js && jest"
+    "test": "cp-cli js/firebase/_mock.js js/firebase/index.js && jest --coverage"
   },
   "dependencies": {
     "expo": "^35.0.0",

@@ -1,16 +1,15 @@
 import React from "react";
 import AsyncMiddleware from "./AsyncMiddleware";
 import { success, fail } from "../utils/actionTypeHelper";
-import AsyncMiddlewareHelpers from "./AsyncMiddlewareHelpers";
+import AsyncMiddlewareHelper from "./AsyncMiddlewareHelper";
 
 const type = "DUMMY_ACTION";
-const store = {};
 
 describe("AsyncMiddleware", () => {
   it("simply next is called", () => {
     const nextMock = jest.fn();
     const action = { type };
-    AsyncMiddleware(store)(nextMock)(action);
+    AsyncMiddleware({})(nextMock)(action);
     expect(nextMock.mock.calls.length).toBe(1);
     expect(nextMock.mock.calls[0]).toEqual([action]);
     jest.restoreAllMocks();
@@ -34,13 +33,13 @@ describe("AsyncMiddleware", () => {
         onSuccess
       }
     };
-    const alertSpy = spyOn(AsyncMiddlewareHelpers, "alert");
-    await AsyncMiddleware(store)(nextMock)(action);
+    const alertSpy = spyOn(AsyncMiddlewareHelper, "alert");
+    await AsyncMiddleware({})(nextMock)(action);
     expect(nextMock.mock.calls.length).toBe(2);
     expect(nextMock.mock.calls[1]).toEqual([
       {
         type: success(action.type),
-        payload: AsyncMiddlewareHelpers.createPayload(result, action.async)
+        payload: AsyncMiddlewareHelper.createPayload(result, action.async)
       }
     ]);
     expect(alertSpy).toHaveBeenCalledTimes(1);
@@ -66,13 +65,13 @@ describe("AsyncMiddleware", () => {
         onSuccess
       }
     };
-    await AsyncMiddleware(store)(nextMock)(action);
+    await AsyncMiddleware({})(nextMock)(action);
     expect(nextMock.mock.calls.length).toBe(3);
     expect(nextMock.mock.calls[0]).toEqual([action]);
     expect(nextMock.mock.calls[1]).toEqual([
       {
         type: success(action.type),
-        payload: AsyncMiddlewareHelpers.createPayload(result, action.async)
+        payload: AsyncMiddlewareHelper.createPayload(result, action.async)
       }
     ]);
     expect(nextMock.mock.calls[2]).toEqual([onSuccess]);
@@ -97,8 +96,8 @@ describe("AsyncMiddleware", () => {
         onError
       }
     };
-    const alertSpy = spyOn(AsyncMiddlewareHelpers, "alert");
-    await AsyncMiddleware(store)(nextMock)(action);
+    const alertSpy = spyOn(AsyncMiddlewareHelper, "alert");
+    await AsyncMiddleware({})(nextMock)(action);
     expect(nextMock.mock.calls.length).toBe(2);
     expect(nextMock.mock.calls[1]).toEqual([
       {
@@ -129,7 +128,7 @@ describe("AsyncMiddleware", () => {
         onError
       }
     };
-    await AsyncMiddleware(store)(nextMock)(action);
+    await AsyncMiddleware({})(nextMock)(action);
     expect(nextMock.mock.calls.length).toBe(3);
     expect(nextMock.mock.calls[0]).toEqual([action]);
     expect(nextMock.mock.calls[1]).toEqual([

@@ -1,18 +1,18 @@
 import { success, fail } from "../utils/actionTypeHelper";
-import AsyncMiddlewareHelpers from "./AsyncMiddlewareHelpers";
+import AsyncMiddlewareHelper from "./AsyncMiddlewareHelper";
 
 const AsyncMiddleware = store => next => async action => {
   next(action);
   if (action.async) {
-    const asyncOptions = AsyncMiddlewareHelpers.getAsyncOptions(action, store);
+    const asyncOptions = AsyncMiddlewareHelper.getAsyncOptions(action, store);
     try {
-      let result = await AsyncMiddlewareHelpers.getPromise(asyncOptions);
+      let result = await AsyncMiddlewareHelper.getPromise(asyncOptions);
       next({
         type: success(action.type),
-        payload: AsyncMiddlewareHelpers.createPayload(result, asyncOptions)
+        payload: AsyncMiddlewareHelper.createPayload(result, asyncOptions)
       });
       if (asyncOptions.alertOnSuccess) {
-        AsyncMiddlewareHelpers.alert(asyncOptions.alertOnSuccess, result);
+        AsyncMiddlewareHelper.alert(asyncOptions.alertOnSuccess, result);
       }
       if (typeof asyncOptions.onSuccess === "function") {
         asyncOptions.onSuccess(result);
@@ -26,7 +26,7 @@ const AsyncMiddleware = store => next => async action => {
         error
       });
       if (asyncOptions.alertOnError) {
-        AsyncMiddlewareHelpers.alert(asyncOptions.alertOnError, error);
+        AsyncMiddlewareHelper.alert(asyncOptions.alertOnError, error);
       }
       if (typeof asyncOptions.onError === "function") {
         asyncOptions.onError(error);
