@@ -65,10 +65,7 @@ export default createStackNavigator({
             marginHorizontal: 6,
             padding: 10
           }}
-          onPress={() => {
-            console.log("press", screenProps.signOut);
-            screenProps.signOut();
-          }}
+          onPress={screenProps.signOut}
         >
           <Icon name="logout" size={17} color="#fff" />
         </TouchableOpacity>

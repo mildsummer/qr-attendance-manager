@@ -1,23 +1,18 @@
 import { success, fail } from "../utils/actionTypeHelper";
-import {
-  getPromise,
-  createPayload,
-  alertResult
-} from "./AsyncMiddlewareHelpers";
+import AsyncMiddlewareHelpers from "./AsyncMiddlewareHelpers";
 
 const AsyncMiddleware = store => next => async action => {
   next(action);
   if (action.async) {
-    const asyncOptions =
-      typeof action.async === "function" ? action.async(store) : action.async;
+    const asyncOptions = AsyncMiddlewareHelpers.getAsyncOptions(action, store);
     try {
-      let result = await getPromise(asyncOptions);
+      let result = await AsyncMiddlewareHelpers.getPromise(asyncOptions);
       next({
         type: success(action.type),
-        payload: createPayload(result, asyncOptions)
+        payload: AsyncMiddlewareHelpers.createPayload(result, asyncOptions)
       });
       if (asyncOptions.alertOnSuccess) {
-        alertResult(asyncOptions.alertOnSuccess, result);
+        AsyncMiddlewareHelpers.alert(asyncOptions.alertOnSuccess, result);
       }
       if (typeof asyncOptions.onSuccess === "function") {
         asyncOptions.onSuccess(result);
@@ -31,7 +26,7 @@ const AsyncMiddleware = store => next => async action => {
         error
       });
       if (asyncOptions.alertOnError) {
-        alertResult(asyncOptions.alertOnError, error);
+        AsyncMiddlewareHelpers.alert(asyncOptions.alertOnError, error);
       }
       if (typeof asyncOptions.onError === "function") {
         asyncOptions.onError(error);
