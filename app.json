@@ -32,7 +32,7 @@
       }
     },
     "android": {
-      "package": "qr.attendance.manager.nodokayamamoto.com"
+      "package": "com.nodokayamamoto.qr.attendance.manager"
     },
     "primaryColor": "#00c2ad"
   }
