@@ -10,7 +10,7 @@
       "android",
       "web"
     ],
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -28,11 +28,11 @@
       "supportsTablet": true,
       "bundleIdentifier": "qr.attendance.manager.nodokayamamoto.com",
       "infoPlist": {
-        "NSPhotoLibraryUsageDescription": "QRコードを読み取るためにカメラを使用します"
+        "NSCameraUsageDescription": "QRコードを読み取るためにカメラを使用します"
       }
     },
     "android": {
-      "package": "com.nodokayamamoto.qr.attendance.manager"
+      "package": "qr.attendance.manager.nodokayamamoto.com"
     },
     "primaryColor": "#00c2ad"
   }

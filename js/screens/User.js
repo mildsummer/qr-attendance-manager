@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import {
   Text,
   View,
+  ScrollView,
   TouchableWithoutFeedback,
   Keyboard,
   ActivityIndicator,
@@ -21,11 +22,10 @@ import colors from "../constants/colors";
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     padding: 16,
+    minHeight: '100%',
     backgroundColor: colors.accent,
-    alignItems: "center",
-    justifyContent: "center"
+    alignItems: "center"
   },
   nameWrapper: {
     width: "100%"
@@ -84,7 +84,11 @@ class User extends Component {
     } = this.props;
     return (
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-        <View style={styles.container}>
+        <ScrollView
+          contentContainerStyle={styles.container}
+          alwaysBounceVertical={false}
+          centerContent={true}
+        >
           <View style={styles.nameWrapper}>
             <Input
               label={`QRコードに紐付けるタイトルや、\nあなたの名前などを設定してください`}
@@ -123,7 +127,7 @@ class User extends Component {
               </View>
             </TouchableWithoutFeedback>
           </View>
-        </View>
+        </ScrollView>
       </TouchableWithoutFeedback>
     );
   }

@@ -88,6 +88,8 @@ exports.createHistory = functions.https.onCall((data, context) => {
       } else {
         throw new functions.https.HttpsError('cancelled', '無効なQRコードです');
       }
+    }).catch(() => {
+      throw new functions.https.HttpsError('internal', 'エラーが発生しました');
     });
 });
 
