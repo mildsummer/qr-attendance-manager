@@ -134,8 +134,8 @@ class Reader extends Component {
   };
 
   render() {
-    const { isSendingHistory } = this.props;
-    return (
+    const { isSendingHistory, hasCameraPermission } = this.props;
+    return hasCameraPermission ? (
       <TouchableWithoutFeedback style={styles.container} onPress={this.toggle}>
         <Camera
           ref={ref => {
@@ -162,7 +162,7 @@ class Reader extends Component {
           ) : null}
         </Camera>
       </TouchableWithoutFeedback>
-    );
+    ) : null;
   }
 }
 
