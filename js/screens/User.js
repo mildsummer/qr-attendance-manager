@@ -15,8 +15,7 @@ import {
   sendPasswordResetEmail,
   sendName,
   changeName,
-  createToken,
-  askNotificationPermission
+  createToken
 } from "../actions";
 import QRCode from "../components/QRCode";
 import colors from "../constants/colors";
@@ -65,10 +64,6 @@ const styles = StyleSheet.create({
 });
 
 class User extends Component {
-  componentDidMount() {
-    this.props.askNotificationPermission();
-  }
-
   onChangeName = name => {
     const { changeName, sendName } = this.props;
     changeName(name);
@@ -85,8 +80,7 @@ class User extends Component {
       createToken,
       name,
       isCreatingToken,
-      isSendingName,
-      notificationToken
+      isSendingName
     } = this.props;
     return (
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
@@ -152,8 +146,7 @@ const mapDispatchToProps = {
   sendName,
   changeName,
   sendPasswordResetEmail,
-  createToken,
-  askNotificationPermission
+  createToken
 };
 
 export default connect(

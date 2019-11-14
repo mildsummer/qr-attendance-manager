@@ -7,6 +7,7 @@ export const CHANGE_DATE = "CHANGE_DATE";
 export const ASK_CAMERA_PERMISSION = "ASK_CAMERA_PERMISSION";
 export const NAVIGATE = "NAVIGATE";
 export const ASK_NOTIFICATION_PERMISSION = "ASK_NOTIFICATION_PERMISSION";
+export const GET_NOTIFICATION_PERMISSION = "GET_NOTIFICATION_PERMISSION";
 export const SET_EXPO_PUSH_TOKEN = "SET_EXPO_PUSH_TOKEN";
 export const GET_EXPO_PUSH_TOKEN = "GET_EXPO_PUSH_TOKEN";
 export const RECEIVE_NOTIFICATION = "RECEIVE_NOTIFICATION";
@@ -57,7 +58,8 @@ export const setPushToken = pushToken => ({
           pushToken
         )
       }
-    ]
+    ],
+    alertOnError: true
   })
 });
 
@@ -66,7 +68,6 @@ export const getExpoPushToken = () => ({
   async: store => ({
     func: Notifications.getExpoPushTokenAsync,
     onSuccess: pushToken => {
-      console.log(pushToken);
       if (
         (store.getState().user.data.pushTokens || []).indexOf(pushToken) === -1
       ) {
@@ -74,7 +75,8 @@ export const getExpoPushToken = () => ({
       } else {
         return false;
       }
-    }
+    },
+    alertOnError: true
   })
 });
 
@@ -84,12 +86,28 @@ export const askNotificationPermission = () => ({
     func: Permissions.askAsync,
     args: [Permissions.NOTIFICATIONS],
     onSuccess: result => {
-      console.log(result.status);
       if (result.status === "granted") {
         return getExpoPushToken();
       } else {
         return false;
       }
-    }
+    },
+    alertOnError: true
+  }
+});
+
+export const getNotificationPermission = () => ({
+  type: GET_NOTIFICATION_PERMISSION,
+  async: {
+    func: Permissions.getAsync,
+    args: [Permissions.NOTIFICATIONS],
+    onSuccess: result => {
+      if (result.status === "granted") {
+        return getExpoPushToken();
+      } else {
+        return askNotificationPermission();
+      }
+    },
+    alertOnError: true
   }
 });

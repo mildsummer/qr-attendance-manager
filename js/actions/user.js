@@ -1,4 +1,5 @@
 import { db } from "../firebase";
+import { getNotificationPermission } from './common';
 
 export const GET_USER = "GET_USER";
 export const SEND_NAME = "SEND_NAME";
@@ -10,7 +11,8 @@ export const getUser = uid => ({
   async: {
     dbRef: db.collection("/users").doc(uid),
     dbMethod: "get",
-    payload: documentSnapshot => documentSnapshot.data()
+    payload: documentSnapshot => documentSnapshot.data(),
+    onSuccess: getNotificationPermission()
   }
 });
 
