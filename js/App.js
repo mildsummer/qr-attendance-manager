@@ -22,11 +22,11 @@ if (process.env.NODE_ENV !== "test") {
   });
 }
 Notifications.addListener(notification => {
-  console.log(notification);
   store.dispatch({
     type: actions.RECEIVE_NOTIFICATION,
     payload: notification
   });
+  Notifications.setBadgeNumberAsync(0);
   if (notification.data.historyId) {
     if (notification.origin === "selected") {
       store.dispatch(

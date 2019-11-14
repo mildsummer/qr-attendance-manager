@@ -66,6 +66,7 @@ export const getExpoPushToken = () => ({
   async: store => ({
     func: Notifications.getExpoPushTokenAsync,
     onSuccess: pushToken => {
+      console.log(pushToken);
       if (
         (store.getState().user.data.pushTokens || []).indexOf(pushToken) === -1
       ) {
@@ -83,6 +84,7 @@ export const askNotificationPermission = () => ({
     func: Permissions.askAsync,
     args: [Permissions.NOTIFICATIONS],
     onSuccess: result => {
+      console.log(result.status);
       if (result.status === "granted") {
         return getExpoPushToken();
       } else {

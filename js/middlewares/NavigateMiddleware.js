@@ -10,13 +10,21 @@ export function setTopLevelNavigator(navigatorRef) {
   _navigator = navigatorRef;
 }
 
-export default store => next => action => {
+const NavigateMiddleware = store => next => action => {
   next(action);
-  if (action.navigate && _navigator) {
-    if (typeof action.navigate === "string") {
-      navigate({ routeName: action.navigate });
+  if (action.navigate) {
+    if (_navigator) {
+      if (typeof action.navigate === "string") {
+        navigate({ routeName: action.navigate });
+      } else {
+        navigate(action.navigate);
+      }
     } else {
-      navigate(action.navigate);
+      setTimeout(() => {
+        NavigateMiddleware(store)(next)(action);
+      });
     }
   }
 };
+
+export default NavigateMiddleware;
