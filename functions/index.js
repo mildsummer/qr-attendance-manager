@@ -149,20 +149,22 @@ exports.submitComment = functions.https.onCall(({ historyId, comment }, context)
       return batch.commit();
     })
     .then(() => {
-      targetUser.get().then((targetUserDoc) => {
-        if (targetUserDoc.data().pushToken) {
-          const name = historyData.type === constants.HISTORY_TYPE_GUEST ? historyData.guestName : historyData.hostName;
-          sendNotification(
-            targetUserDoc.data().pushToken,
-            {
-              title: 'コメントが届きました',
-              subtitle: name,
-              body: comment
-            },
-            { comment, historyId: targetHistoryId, name }
-          );
-        }
-      });
+      if (comment) {
+        targetUser.get().then((targetUserDoc) => {
+          if (targetUserDoc.data().pushToken) {
+            const name = historyData.type === constants.HISTORY_TYPE_GUEST ? historyData.guestName : historyData.hostName;
+            sendNotification(
+              targetUserDoc.data().pushToken,
+              {
+                title: historyData[key] ? 'コメントが更新されました' : 'コメントが届きました',
+                subtitle: name,
+                body: comment
+              },
+              { comment, historyId: targetHistoryId, name }
+            );
+          }
+        });
+      }
     })
     .then(() => ({ message: 'success' }))
     .catch(({ message }) => {
