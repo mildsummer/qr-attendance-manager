@@ -1,8 +1,9 @@
 import { db } from "../firebase";
-
 export const SEND_HISTORY = "SEND_HISTORY";
 export const GET_HISTORY = "GET_HISTORY";
+export const GET_HISTORY_BY_ID = "GET_HISTORY_BY_ID";
 export const REFRESH_HISTORY = "REFRESH_HISTORY";
+export const SUBMIT_COMMENT = "SUBMIT_COMMENT";
 
 export const sendHistory = token => ({
   type: SEND_HISTORY,
@@ -52,6 +53,22 @@ export const getHistory = (size, startAfter) => ({
   }
 });
 
+export const getHistoryById = historyId => ({
+  type: GET_HISTORY_BY_ID,
+  async: store => {
+    const user = store.getState().auth.data;
+    return {
+      dbRef: db
+        .collection("/users")
+        .doc(user.uid)
+        .collection("/history")
+        .doc(historyId),
+      dbMethod: "get",
+      alertOnError: true
+    };
+  }
+});
+
 export const refreshHistory = () => ({
   type: REFRESH_HISTORY,
   async: store => {
@@ -71,5 +88,14 @@ export const refreshHistory = () => ({
       payload: querySnapshot => querySnapshot.docs,
       alertOnError: true
     };
+  }
+});
+
+export const submitComment = (historyId, comment) => ({
+  type: SUBMIT_COMMENT,
+  async: {
+    func: "submitComment",
+    args: [{ historyId, comment }],
+    alertOnError: true
   }
 });

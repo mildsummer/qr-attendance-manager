@@ -3,10 +3,12 @@ import { success, fail } from "../utils/actionTypeHelper";
 
 const INITIAL_STATE = {
   data: null,
+  currentDoc: null,
   hasGetAll: false,
   isSendingHistory: false,
   isLoading: false,
   isRefreshing: false,
+  isSubmittingComment: false,
   historyLog: {},
   hasCameraPermission: false,
   askingCameraPermission: false
@@ -63,6 +65,11 @@ export default (state = INITIAL_STATE, action) => {
         isLoading: false,
         isRefreshing: false
       };
+    case success(actions.GET_HISTORY_BY_ID):
+      return {
+        ...state,
+        currentDoc: action.payload
+      };
     case actions.REFRESH_HISTORY:
       return {
         ...state,
@@ -73,6 +80,21 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         data: action.payload.concat(state.data),
         isRefreshing: false
+      };
+    case actions.SUBMIT_COMMENT:
+      return {
+        ...state,
+        isSubmittingComment: true
+      };
+    case success(actions.SUBMIT_COMMENT):
+      return {
+        ...state,
+        isSubmittingComment: false
+      };
+    case fail(actions.SUBMIT_COMMENT):
+      return {
+        ...state,
+        isSubmittingComment: false
       };
     case actions.CHANGE_DATE:
       return {

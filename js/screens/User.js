@@ -15,7 +15,8 @@ import {
   sendPasswordResetEmail,
   sendName,
   changeName,
-  createToken
+  createToken,
+  askNotificationPermission
 } from "../actions";
 import QRCode from "../components/QRCode";
 import colors from "../constants/colors";
@@ -23,7 +24,7 @@ import colors from "../constants/colors";
 const styles = StyleSheet.create({
   container: {
     padding: 16,
-    minHeight: '100%',
+    minHeight: "100%",
     backgroundColor: colors.accent,
     alignItems: "center"
   },
@@ -64,6 +65,10 @@ const styles = StyleSheet.create({
 });
 
 class User extends Component {
+  componentDidMount() {
+    this.props.askNotificationPermission();
+  }
+
   onChangeName = name => {
     const { changeName, sendName } = this.props;
     changeName(name);
@@ -77,10 +82,11 @@ class User extends Component {
     const {
       user,
       token,
-      refreshToken,
+      createToken,
       name,
       isCreatingToken,
-      isSendingName
+      isSendingName,
+      notificationToken
     } = this.props;
     return (
       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
@@ -111,7 +117,7 @@ class User extends Component {
               <QRCode data={token} size="100%" errorCorrectionLevel="H" />
             ) : null}
             <TouchableWithoutFeedback
-              onPress={isCreatingToken ? null : refreshToken}
+              onPress={isCreatingToken ? null : createToken}
             >
               <View style={styles.refreshButton}>
                 {isCreatingToken ? (
@@ -138,14 +144,16 @@ const mapStateToProps = state => ({
   name: state.user.name,
   token: state.user.token,
   isCreatingToken: state.user.isCreatingToken,
-  isSendingName: state.user.isSendingName
+  isSendingName: state.user.isSendingName,
+  notificationToken: state.common.notificationToken
 });
 
 const mapDispatchToProps = {
   sendName,
   changeName,
   sendPasswordResetEmail,
-  refreshToken: createToken
+  createToken,
+  askNotificationPermission
 };
 
 export default connect(

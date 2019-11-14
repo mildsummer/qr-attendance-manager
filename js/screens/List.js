@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { View, ActivityIndicator, StyleSheet } from "react-native";
 import { connect } from "react-redux";
-import { getHistory, refreshHistory } from "../actions";
+import { getHistory, refreshHistory, navigate } from "../actions";
 import colors from "../constants/colors";
 import HistoryList from "../components/HistoryList";
 
@@ -32,6 +32,14 @@ class List extends Component {
     getHistory(20, data && data.length ? data[data.length - 1] : null);
   };
 
+  onPress = doc => {
+    const { navigate } = this.props;
+    navigate({
+      routeName: "HistoryDetail",
+      params: { id: doc.id }
+    });
+  };
+
   render() {
     const {
       data,
@@ -49,6 +57,7 @@ class List extends Component {
             isLoading={isLoading}
             isRefreshing={isRefreshing}
             refresh={refreshHistory}
+            onPress={this.onPress}
             startLoading={this.startLoading}
           />
         ) : (
@@ -73,7 +82,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {
   getHistory,
-  refreshHistory
+  refreshHistory,
+  navigate
 };
 
 export default connect(

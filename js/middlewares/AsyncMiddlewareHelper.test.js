@@ -10,7 +10,7 @@ const state = {
   }
 };
 const store = {
-  getState: () => (state)
+  getState: () => state
 };
 
 describe("AsyncMiddlewareHelper", () => {
@@ -20,10 +20,12 @@ describe("AsyncMiddlewareHelper", () => {
       type,
       async: { func }
     };
-    expect(AsyncMiddlewareHelper.getAsyncOptions(action, store)).toBe(action.async);
+    expect(AsyncMiddlewareHelper.getAsyncOptions(action, store)).toBe(
+      action.async
+    );
     action = {
       type,
-      async: (store) => ({
+      async: store => ({
         func,
         args: [store.getState().user.data.id]
       })

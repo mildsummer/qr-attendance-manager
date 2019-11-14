@@ -3,7 +3,8 @@ import { success, fail } from "../utils/actionTypeHelper";
 
 const INITIAL_STATE = {
   hasCameraPermission: false,
-  askingCameraPermission: false
+  askingCameraPermission: false,
+  notificationToken: null
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -24,6 +25,11 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         hasCameraPermission: false,
         askingCameraPermission: false
+      };
+    case success(actions.GET_EXPO_PUSH_TOKEN):
+      return {
+        ...state,
+        notificationToken: action.payload
       };
     default:
       return state;

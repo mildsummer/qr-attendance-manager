@@ -15,7 +15,10 @@ const AsyncMiddleware = store => next => async action => {
         AsyncMiddlewareHelper.alert(asyncOptions.alertOnSuccess, result);
       }
       if (typeof asyncOptions.onSuccess === "function") {
-        asyncOptions.onSuccess(result);
+        const onSuccessAction = asyncOptions.onSuccess(result);
+        if (typeof onSuccessAction === "object") {
+          AsyncMiddleware(store)(next)(onSuccessAction);
+        }
       } else if (typeof asyncOptions.onSuccess === "object") {
         AsyncMiddleware(store)(next)(asyncOptions.onSuccess);
       }
@@ -29,7 +32,10 @@ const AsyncMiddleware = store => next => async action => {
         AsyncMiddlewareHelper.alert(asyncOptions.alertOnError, error);
       }
       if (typeof asyncOptions.onError === "function") {
-        asyncOptions.onError(error);
+        const onErrorAction = asyncOptions.onError(error);
+        if (typeof onErrorAction === "object") {
+          AsyncMiddleware(store)(next)(onErrorAction);
+        }
       } else if (typeof asyncOptions.onError === "object") {
         AsyncMiddleware(store)(next)(asyncOptions.onError);
       }

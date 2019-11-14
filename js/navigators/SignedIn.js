@@ -4,10 +4,12 @@ import { createBottomTabNavigator } from "react-navigation-tabs";
 import { TouchableOpacity } from "react-native";
 import Icon from "react-native-vector-icons/SimpleLineIcons";
 import MaterialIcon from "react-native-vector-icons/MaterialCommunityIcons";
+import colors from "../constants/colors";
 
 import User from "../screens/User";
 import Reader from "../screens/Reader";
 import List from "../screens/List";
+import HistoryDetail from "../screens/HistoryDetail";
 
 export default createStackNavigator({
   User: {
@@ -27,8 +29,30 @@ export default createStackNavigator({
             tabBarIcon: <MaterialIcon name="qrcode-scan" size={18} />
           }
         },
-        List: {
-          screen: List,
+        History: {
+          screen: createStackNavigator({
+            List: {
+              screen: List,
+              navigationOptions: ({ screenProps }) => ({
+                header: null,
+                headerTintColor: colors.accent,
+                headerBackTitle: null,
+                headerStyle: {
+                  marginTop: -screenProps.insets.top
+                }
+              })
+            },
+            HistoryDetail: {
+              screen: HistoryDetail,
+              navigationOptions: ({ screenProps }) => ({
+                title: "詳細",
+                headerTintColor: colors.accent,
+                headerStyle: {
+                  marginTop: -screenProps.insets.top
+                }
+              })
+            }
+          }),
           navigationOptions: {
             title: "履歴",
             tabBarIcon: <MaterialIcon name="history" size={20} />
@@ -37,7 +61,7 @@ export default createStackNavigator({
       },
       {
         initialRouteName: "User",
-        order: ["Reader", "User", "List"],
+        order: ["Reader", "User", "History"],
         tabBarOptions: {
           style: {
             borderTopWidth: 0
@@ -49,7 +73,7 @@ export default createStackNavigator({
       title: {
         User: "ホーム",
         Reader: "QR読み取り",
-        List: "読み取り履歴"
+        History: "読み取り履歴"
       }[navigation.state.routes[navigation.state.index].key],
       headerTintColor: "#fff",
       headerStyle: {

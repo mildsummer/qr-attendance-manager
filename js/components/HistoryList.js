@@ -40,7 +40,8 @@ export default class HistoryList extends PureComponent {
       isLoading,
       isRefreshing,
       refresh,
-      startLoading
+      startLoading,
+      onPress
     } = this.props;
     const isLoadingEnabled = !isLoading && !hasGetAll;
     return (
@@ -67,6 +68,7 @@ export default class HistoryList extends PureComponent {
               subtitle={createdAtString}
               subtitleStyle={styles.itemSubtitle}
               bottomDivider
+              onPress={() => onPress(item)}
             />
           );
         }}
@@ -103,5 +105,6 @@ HistoryList.propTypes = {
   isLoading: PropTypes.bool.isRequired,
   isRefreshing: PropTypes.bool.isRequired,
   refresh: PropTypes.func.isRequired,
-  startLoading: PropTypes.func.isRequired
+  startLoading: PropTypes.func.isRequired,
+  onPress: PropTypes.func.isRequired
 };

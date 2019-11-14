@@ -1,6 +1,8 @@
 const constants = require('./constants/common.js');
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
+const { sendNotification } = require('./ExpoNotification');
+
 admin.initializeApp();
 const db = admin.firestore();
 const auth = admin.auth();
@@ -112,4 +114,58 @@ exports.verifyEmail = functions.https.onCall((data) => {
         throw new functions.https.HttpsError(message);
       });
   });
+});
+
+exports.submitComment = functions.https.onCall(({ historyId, comment }, context) => {
+  const user = db.collection('/users')
+    .doc(context.auth.uid);
+  const historyRef = user.collection('/history')
+    .doc(historyId);
+  let targetUser = null;
+  let historyData = null;
+  let key = null;
+  let targetHistoryId = null;
+  return historyRef
+    .get()
+    .then((historyDoc) => {
+      historyData = historyDoc.data();
+      targetUser = db.collection('/users').doc(historyData.uid);
+      key = historyData.type === constants.HISTORY_TYPE_GUEST ? 'guestComment' : 'hostComment';
+      if (historyData[key] !== comment) {
+        return targetUser.collection('/history')
+          .where('createdAt', '==', historyData.createdAt)
+          .where('uid', '==', context.auth.uid)
+          .get();
+      } else {
+        return { message: 'success' };
+      }
+    })
+    .then((result) => {
+      targetHistoryId = result.docs[0].id;
+      const targetHistoryRef = targetUser.collection('/history').doc(targetHistoryId);
+      const batch = db.batch();
+      batch.update(historyRef, { [key]: comment });
+      batch.update(targetHistoryRef, { [key]: comment });
+      return batch.commit();
+    })
+    .then(() => {
+      targetUser.get().then((targetUserDoc) => {
+        if (targetUserDoc.data().pushToken) {
+          const name = historyData.type === constants.HISTORY_TYPE_GUEST ? historyData.guestName : historyData.hostName;
+          sendNotification(
+            targetUserDoc.data().pushToken,
+            {
+              title: 'コメントが届きました',
+              subtitle: name,
+              body: comment
+            },
+            { comment, historyId: targetHistoryId, name }
+          );
+        }
+      });
+    })
+    .then(() => ({ message: 'success' }))
+    .catch(({ message }) => {
+      throw new functions.https.HttpsError(message);
+    });
 });
