@@ -151,17 +151,19 @@ exports.submitComment = functions.https.onCall(({ historyId, comment }, context)
     .then(() => {
       if (comment) {
         targetUser.get().then((targetUserDoc) => {
-          if (targetUserDoc.data().pushToken) {
+          if (targetUserDoc.data().pushTokens) {
             const name = historyData.type === constants.HISTORY_TYPE_GUEST ? historyData.guestName : historyData.hostName;
-            sendNotification(
-              targetUserDoc.data().pushToken,
-              {
-                title: historyData[key] ? 'コメントが更新されました' : 'コメントが届きました',
-                subtitle: name,
-                body: comment
-              },
-              { comment, historyId: targetHistoryId, name }
-            );
+            targetUserDoc.data().pushTokens.forEach((pushToken) => {
+              sendNotification(
+                pushToken,
+                {
+                  title: historyData[key] ? 'コメントが更新されました' : 'コメントが届きました',
+                  subtitle: name,
+                  body: comment
+                },
+                { comment, historyId: targetHistoryId, name }
+              );
+            });
           }
         });
       }

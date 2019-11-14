@@ -51,16 +51,30 @@ export const setPushToken = pushToken => ({
   async: store => ({
     dbRef: db.collection("/users").doc(store.getState().auth.data.uid),
     dbMethod: "update",
-    args: [{ pushToken }]
+    args: [
+      {
+        pushTokens: (store.getState().user.data.pushTokens || []).concat(
+          pushToken
+        )
+      }
+    ]
   })
 });
 
 export const getExpoPushToken = () => ({
   type: GET_EXPO_PUSH_TOKEN,
-  async: {
+  async: store => ({
     func: Notifications.getExpoPushTokenAsync,
-    onSuccess: setPushToken
-  }
+    onSuccess: pushToken => {
+      if (
+        (store.getState().user.data.pushTokens || []).indexOf(pushToken) === -1
+      ) {
+        return setPushToken(pushToken);
+      } else {
+        return false;
+      }
+    }
+  })
 });
 
 export const askNotificationPermission = () => ({
