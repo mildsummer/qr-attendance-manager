@@ -32,7 +32,15 @@
       }
     },
     "android": {
-      "package": "qr.attendance.manager.nodokayamamoto.com"
+      "package": "qr.attendance.manager.nodokayamamoto.com",
+      "adaptiveIcon": {
+        "backgroundColor": "#00c2ad",
+        "foregroundImage": "./assets/adaptiveicon.png"
+      }
+    },
+    "notification": {
+      "icon": "./assets/notificationicon.png",
+      "color": "#00c2ad"
     },
     "primaryColor": "#00c2ad"
   }
