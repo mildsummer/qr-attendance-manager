@@ -14,7 +14,20 @@ export const RECEIVE_NOTIFICATION = "RECEIVE_NOTIFICATION";
 
 export const navigate = config => ({
   type: NAVIGATE,
-  navigate: config
+  navigate: config"カメラへのアクセス許可が必要です",
+  "設定画面へ移動しますか？",
+  [
+    {
+      text: "今はしない",
+      style: "cancel"
+    },
+{
+  text: "設定する",
+    onPress: () => {
+  Linking.openURL("app-settings:");
+}
+}
+]
 });
 
 export const askCameraPermission = () => ({
@@ -25,20 +38,7 @@ export const askCameraPermission = () => ({
     alertOnSuccess: result => {
       if (result.status !== "granted") {
         return [
-          "カメラへのアクセス許可が必要です",
-          "設定画面へ移動しますか？",
-          [
-            {
-              text: "今はしない",
-              style: "cancel"
-            },
-            {
-              text: "設定する",
-              onPress: () => {
-                Linking.openURL("app-settings:");
-              }
-            }
-          ]
+
         ];
       } else {
         return false;

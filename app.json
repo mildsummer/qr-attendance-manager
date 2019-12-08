@@ -10,7 +10,7 @@
       "android",
       "web"
     ],
-    "version": "1.0.7",
+    "version": "1.0.8",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -36,7 +36,13 @@
       "adaptiveIcon": {
         "backgroundColor": "#00c2ad",
         "foregroundImage": "./assets/adaptiveicon.png"
-      }
+      },
+      "versionCode": 2,
+      "permissions": [
+        "CAMERA",
+        "READ_EXTERNAL_STORAGE",
+        "WRITE_EXTERNAL_STORAGE"
+      ]
     },
     "notification": {
       "icon": "./assets/notificationicon.png",

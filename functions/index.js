@@ -7,16 +7,6 @@ admin.initializeApp();
 const db = admin.firestore();
 const auth = admin.auth();
 
-function generateToken() {
-  const a = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890".split("");
-  const b = [];
-  for (let i = 0; i < 28; i++) {
-    const j = (Math.random() * (a.length-1)).toFixed(0);
-    b[i] = a[j];
-  }
-  return b.join("");
-}
-
 exports.createUser = functions.auth.user().onCreate((user) => {
   return db.collection('/users')
     .doc(user.uid)

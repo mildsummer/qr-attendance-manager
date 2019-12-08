@@ -1,0 +1,27 @@
+{
+  "categoryId": "myNotificationCategory",
+  "actions": [
+    {
+      "actionId": "foo",
+      "buttonTitle": "foo",
+      "textInput": {
+        "submitButtonTitle": "OK",
+        "placeholder": "placeholder"
+      },
+      "isDestructive": true,
+      "isAuthenticationRequired": true
+    },
+    {
+      "actionId": "bar",
+      "buttonTitle": "bar",
+      "isDestructive": false,
+      "isAuthenticationRequired": true
+    },
+    {
+      "actionId": "baz",
+      "buttonTitle": "baz",
+      "isDestructive": false,
+      "isAuthenticationRequired": false
+    }
+  ]
+}

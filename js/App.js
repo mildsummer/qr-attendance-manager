@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { ThemeProvider } from "react-native-elements";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { Notifications } from "expo";
-import { Alert } from "react-native";
+import { Alert, Platform } from "react-native";
 import { Provider } from "react-redux";
 import "./firebase";
 import * as actions from "./actions";
@@ -21,12 +21,35 @@ if (process.env.NODE_ENV !== "test") {
     });
   });
 }
+
+fetch('https://qr-attendance-manager.firebaseapp.com/notification_category.json')
+  .then((response) => response.json())
+  .then(async (category) => {
+    if (category.categoryId) {
+      try {
+        await Notifications.deleteCategoryAsync(category.categoryId);
+        await Notifications.createCategoryAsync(category.categoryId, category.actions);
+        console.log(category.categoryId, 'create success');
+        Notifications.addListener(notification => {
+          console.log('received', notification);
+          const action = category.actions.find((action) => (action.actionId === notification.actionId));
+          if (action) {
+            Alert.alert(JSON.stringify(notification));
+          }
+        });
+      } catch ({ error }) {
+        Alert.alert(message);
+      }
+    }
+  }).catch((error) => {
+    console.log(error);
+});
+
 Notifications.addListener(notification => {
   store.dispatch({
     type: actions.RECEIVE_NOTIFICATION,
     payload: notification
   });
-  Notifications.setBadgeNumberAsync(0);
   if (notification.data.historyId) {
     if (notification.origin === "selected") {
       store.dispatch(
@@ -59,7 +82,18 @@ Notifications.addListener(notification => {
       );
     }
   }
+  if (typeof notification.data.badge === 'number' && Platform.OS === 'ios') {
+    Notifications.setBadgeNumberAsync(notification.data.badge);
+  }
+  if (notification.data.local) {
+    if (notification.data.localSchedulingOptions) {
+      Notifications.scheduleLocalNotificationAsync(notification.data.local, notification.data.localSchedulingOptions);
+    } else {
+      Notifications.presentLocalNotificationAsync(notification.data.local);
+    }
+  }
 });
+Notifications.cancelAllScheduledNotificationsAsync();
 
 export default class App extends Component {
   render() {
