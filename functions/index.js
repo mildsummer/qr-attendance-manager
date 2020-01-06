@@ -138,26 +138,26 @@ exports.submitComment = functions.https.onCall(({ historyId, comment }, context)
       batch.update(targetHistoryRef, { [key]: comment });
       return batch.commit();
     })
-    .then(() => {
-      if (comment) {
-        targetUser.get().then((targetUserDoc) => {
-          if (targetUserDoc.data().pushTokens) {
-            const name = historyData.type === constants.HISTORY_TYPE_GUEST ? historyData.guestName : historyData.hostName;
-            targetUserDoc.data().pushTokens.forEach((pushToken) => {
-              sendNotification(
-                pushToken,
-                {
-                  title: historyData[key] ? 'コメントが更新されました' : 'コメントが届きました',
-                  subtitle: name,
-                  body: comment
-                },
-                { comment, historyId: targetHistoryId, name }
-              );
-            });
-          }
-        });
-      }
-    })
+    // .then(() => {
+    //   if (comment) {
+    //     targetUser.get().then((targetUserDoc) => {
+    //       if (targetUserDoc.data().pushTokens) {
+    //         const name = historyData.type === constants.HISTORY_TYPE_GUEST ? historyData.guestName : historyData.hostName;
+    //         targetUserDoc.data().pushTokens.forEach((pushToken) => {
+    //           sendNotification(
+    //             pushToken,
+    //             {
+    //               title: historyData[key] ? 'コメントが更新されました' : 'コメントが届きました',
+    //               subtitle: name,
+    //               body: comment
+    //             },
+    //             { comment, historyId: targetHistoryId, name }
+    //           );
+    //         });
+    //       }
+    //     });
+    //   }
+    // })
     .then(() => ({ message: 'success' }))
     .catch(({ message }) => {
       throw new functions.https.HttpsError(message);
